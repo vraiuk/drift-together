@@ -14,16 +14,21 @@ namespace DriftTogether.Core
         readonly IClock _clock;
         float _lastDamageTime = float.NegativeInfinity;
 
-        public int Current { get; private set; } = MaxPoints;
+        /// <summary>Configured maximum (3 for the kayak, 5 for the co-op raft).</summary>
+        public int Max { get; }
+
+        public int Current { get; private set; }
         public bool IsBroken => Current <= 0;
         public bool IsInvulnerable => _clock.Now - _lastDamageTime < InvulnerabilityDuration;
 
         public event Action<int> Changed;
         public event Action Broken;
 
-        public HullIntegrity(IClock clock)
+        public HullIntegrity(IClock clock, int maxPoints = MaxPoints)
         {
             _clock = clock ?? throw new ArgumentNullException(nameof(clock));
+            Max = maxPoints;
+            Current = maxPoints;
         }
 
         /// <summary>Returns true if the hit actually removed a point.</summary>
@@ -42,9 +47,9 @@ namespace DriftTogether.Core
 
         public void RestoreFull()
         {
-            if (Current == MaxPoints)
+            if (Current == Max)
                 return;
-            Current = MaxPoints;
+            Current = Max;
             Changed?.Invoke(Current);
         }
     }
