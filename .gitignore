@@ -1,0 +1,17 @@
+# Unity generated
+DriftTogether/Library/
+DriftTogether/Temp/
+DriftTogether/Obj/
+DriftTogether/Logs/
+DriftTogether/UserSettings/
+DriftTogether/.vs/
+DriftTogether/*.csproj
+DriftTogether/*.sln
+
+# Build outputs (published as GitHub Release assets)
+Builds/
+
+# Local logs and reports from the automated run
+unity-*.log
+smoke-standalone.log
+*.DS_Store
