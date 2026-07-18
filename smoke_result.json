@@ -1,9 +1,9 @@
 {
   "success": true,
-  "elapsedGameSeconds": 321.1,
+  "mode": "coop",
+  "elapsedGameSeconds": 653.7,
   "route": "NoisyStream",
-  "mushrooms": 5,
-  "collisions": 12,
-  "respawns": 8,
-  "realSeconds": 64.9
+  "raftCollisions": 7,
+  "hullAtFinish": 3,
+  "realSeconds": 131.4
 }
