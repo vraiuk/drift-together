@@ -339,7 +339,8 @@ namespace DriftTogether.UI
                 $"Время: {minutes:00}:{seconds:00}   ·   Маршрут: {stats.RouteDisplayName()}",
                 $"Столкновений плота: {stats.RaftCollisions}   ·   Прочность на финише: {stats.HullAtFinish}/{Coop.Net.RaftController.MaxHull}",
                 $"Падений за борт: {overboardTotal}   ·   Переворотов: {stats.Capsizes}   ·   Плот уплывал: {stats.RaftLosses}" +
-                    (stats.PortageUsed ? "   ·   Волок: да" : "")
+                    (stats.PortageUsed ? "   ·   Волок: да" : "") +
+                    (stats.ModulesBuilt > 0 ? $"   ·   Модулей построено: {stats.ModulesBuilt}" : "")
             };
             for (int i = 0; i < lines.Length; i++)
             {

@@ -22,7 +22,8 @@ namespace DriftTogether.Core
         RaftSnagged,
         Camp,
         Boar,
-        Portage
+        Portage,
+        Modules
     }
 
     /// <summary>

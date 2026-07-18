@@ -38,6 +38,10 @@ namespace DriftTogether.Coop.Net
         public AnchorSystem Anchor { get; private set; }
         Transform _anchorMarker;
 
+        /// <summary>UC-13: модули плота (бит-маска RaftSlot).</summary>
+        public NetworkVariable<int> ModulesMask = new NetworkVariable<int>(0);
+        public ModuleSystem Modules { get; } = new ModuleSystem();
+
         /// <summary>UC-09: покинутый плот уплывает и цепляется ниже по течению.</summary>
         public NetworkVariable<bool> Snagged = new NetworkVariable<bool>(false);
         public readonly AdriftRule Adrift = new AdriftRule();
@@ -90,6 +94,130 @@ namespace DriftTogether.Coop.Net
 
             BuildVisuals();
             CoopBootstrap.RegisterRaft(this);
+
+            ModulesMask.OnValueChanged += (_, mask) =>
+            {
+                Modules.LoadMask(mask);
+                Balance.ExtraTiltFactor = Modules.TiltFactor;
+                RefreshModuleVisuals();
+            };
+            Modules.LoadMask(ModulesMask.Value);
+            RefreshModuleVisuals();
+        }
+
+        // ---------- UC-13: модули ----------
+
+        static readonly UnityEngine.Vector3[] SlotLocal =
+        {
+            new Vector3(0f, 0.4f, 1.05f),    // Bow — парус
+            new Vector3(-0.9f, 0.4f, -0.5f), // Midship — тент
+            new Vector3(1.1f, 0.4f, 0.7f)    // Stern-corner — верстак
+        };
+
+        readonly GameObject[] _moduleVisuals = new GameObject[3];
+
+        public RaftSlot? NearSlot(Vector3 position, float radius)
+        {
+            for (int i = 0; i < SlotLocal.Length; i++)
+            {
+                if (Modules.Has((RaftSlot)i))
+                    continue;
+                if (Vector3.Distance(position, transform.TransformPoint(SlotLocal[i])) < radius)
+                    return (RaftSlot)i;
+            }
+            return null;
+        }
+
+        [Rpc(SendTo.Server, RequireOwnership = false)]
+        public void InstallModuleServerRpc(int slot, RpcParams p = default)
+        {
+            if (Capsized.Value || slot < 0 || slot > 2)
+                return;
+            int cost = Modules.TryInstall((RaftSlot)slot, Logs.Value);
+            if (cost < 0)
+                return;
+            Logs.Value -= cost;
+            ModulesMask.Value = Modules.Mask;
+            if (_stats != null)
+                _stats.ModulesBuilt++;
+            Balance.ExtraTiltFactor = Modules.TiltFactor;
+            GetComponent<CoopFlow>().CampfireRestClientRpc();
+            CoopBootstrap.HostSayModules();
+        }
+
+        void RefreshModuleVisuals()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                bool has = Modules.Has((RaftSlot)i);
+                if (has && _moduleVisuals[i] == null)
+                    _moduleVisuals[i] = BuildModuleVisual((RaftSlot)i);
+                else if (_moduleVisuals[i] != null)
+                    _moduleVisuals[i].SetActive(has);
+            }
+        }
+
+        GameObject BuildModuleVisual(RaftSlot slot)
+        {
+            var root = new GameObject($"Module_{slot}");
+            root.transform.SetParent(_visual != null ? _visual : transform, false);
+            root.transform.localPosition = SlotLocal[(int)slot];
+            switch (slot)
+            {
+                case RaftSlot.Bow: // Парус
+                    var sailMast = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                    Destroy(sailMast.GetComponent<Collider>());
+                    sailMast.transform.SetParent(root.transform, false);
+                    sailMast.transform.localPosition = new Vector3(0f, 1.1f, 0f);
+                    sailMast.transform.localScale = new Vector3(0.1f, 1.1f, 0.1f);
+                    GameMaterials.ApplyTo(sailMast, "Wood");
+                    var cloth = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    Destroy(cloth.GetComponent<Collider>());
+                    cloth.transform.SetParent(root.transform, false);
+                    cloth.transform.localPosition = new Vector3(0f, 1.35f, -0.05f);
+                    cloth.transform.localScale = new Vector3(1.9f, 1.3f, 0.04f);
+                    GameMaterials.ApplyTo(cloth, "KayakTrim");
+                    break;
+                case RaftSlot.Midship: // Тент
+                    for (int px = -1; px <= 1; px += 2)
+                        for (int pz = -1; pz <= 1; pz += 2)
+                        {
+                            var pole = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                            Destroy(pole.GetComponent<Collider>());
+                            pole.transform.SetParent(root.transform, false);
+                            pole.transform.localPosition = new Vector3(px * 0.6f, 0.75f, pz * 0.6f);
+                            pole.transform.localScale = new Vector3(0.06f, 0.75f, 0.06f);
+                            GameMaterials.ApplyTo(pole, "Wood");
+                        }
+                    var roof = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    Destroy(roof.GetComponent<Collider>());
+                    roof.transform.SetParent(root.transform, false);
+                    roof.transform.localPosition = new Vector3(0f, 1.55f, 0f);
+                    roof.transform.localScale = new Vector3(1.5f, 0.07f, 1.5f);
+                    GameMaterials.ApplyTo(roof, "Foliage");
+                    break;
+                case RaftSlot.Stern: // Верстак
+                    var table = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    Destroy(table.GetComponent<Collider>());
+                    table.transform.SetParent(root.transform, false);
+                    table.transform.localPosition = new Vector3(0f, 0.35f, 0f);
+                    table.transform.localScale = new Vector3(0.8f, 0.1f, 0.5f);
+                    GameMaterials.ApplyTo(table, "KayakTrim");
+                    var leg = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    Destroy(leg.GetComponent<Collider>());
+                    leg.transform.SetParent(root.transform, false);
+                    leg.transform.localPosition = new Vector3(0f, 0.12f, 0f);
+                    leg.transform.localScale = new Vector3(0.15f, 0.35f, 0.15f);
+                    GameMaterials.ApplyTo(leg, "Wood");
+                    var tool = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    Destroy(tool.GetComponent<Collider>());
+                    tool.transform.SetParent(root.transform, false);
+                    tool.transform.localPosition = new Vector3(0.2f, 0.48f, 0f);
+                    tool.transform.localScale = Vector3.one * 0.16f;
+                    GameMaterials.ApplyTo(tool, "Rock");
+                    break;
+            }
+            return root;
         }
 
         public void HostAttach(RiverFlow flow, CoopRunStats stats)
@@ -425,7 +553,8 @@ namespace DriftTogether.Coop.Net
 
             if (_flow != null)
             {
-                float anchorFactor = Anchor != null && Anchor.State == AnchorState.Dragging ? 0.45f : 1.05f;
+                float anchorFactor = (Anchor != null && Anchor.State == AnchorState.Dragging ? 0.45f : 1.05f) *
+                    Modules.SpeedMultiplier;
                 _body.AddForce(_flow.CurrentAt(transform.position) * anchorFactor, ForceMode.Acceleration);
             }
 
@@ -454,10 +583,10 @@ namespace DriftTogether.Coop.Net
             // Rudder: torque grows with speed.
             RudderAngle.Value = Mathf.MoveTowards(RudderAngle.Value, _rudderInput * 30f, 70f * dt);
             float speedFactor = Mathf.Clamp01(_body.linearVelocity.magnitude / MaxSpeed) + 0.2f;
-            _body.AddTorque(Vector3.up * (RudderAngle.Value / 30f) * RudderTorque * speedFactor,
-                ForceMode.Acceleration);
+            _body.AddTorque(Vector3.up * (RudderAngle.Value / 30f) * RudderTorque * speedFactor *
+                Modules.TurnMultiplier, ForceMode.Acceleration);
 
-            float maxSpeed = Hull.Value <= 0 ? MaxSpeed * 0.5f : MaxSpeed;
+            float maxSpeed = (Hull.Value <= 0 ? MaxSpeed * 0.5f : MaxSpeed) * Modules.SpeedMultiplier;
             Vector3 v = _body.linearVelocity;
             v.y = 0f;
             if (v.magnitude > maxSpeed)
@@ -749,7 +878,7 @@ namespace DriftTogether.Coop.Net
         {
             if (Integrity == null || _repairCooldown > 0f || Integrity.Current >= Integrity.Max)
                 return;
-            _repairHold += Time.deltaTime * 1.5f; // called each held frame (~every Update)
+            _repairHold += Time.deltaTime * 1.5f * Modules.RepairSpeedMultiplier;
             if (_repairHold >= RepairHoldSeconds)
             {
                 _repairHold = 0f;

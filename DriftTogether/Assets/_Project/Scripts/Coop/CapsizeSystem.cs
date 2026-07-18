@@ -22,6 +22,9 @@ namespace DriftTogether.Coop
         public bool Capsized { get; private set; }
         public float RightingProgress { get; private set; }
 
+        /// <summary>Центровка (UC-13): модули поднимают центр тяжести.</summary>
+        public float ExtraTiltFactor = 1f;
+
         /// <summary>Advance balance. crewLocalX — local X of every aboard player (right = +).</summary>
         public void Tick(float dt, IReadOnlyList<float> crewLocalX, bool inFastWater)
         {
@@ -39,7 +42,7 @@ namespace DriftTogether.Coop
                 imbalance *= Mathf.Min(1f, 0.45f + 0.28f * crewLocalX.Count);
             }
 
-            float rate = ImbalanceRate * (inFastWater ? 1.6f : 1f);
+            float rate = ImbalanceRate * (inFastWater ? 1.6f : 1f) * ExtraTiltFactor;
             Tilt += imbalance * rate * dt;
 
             // Natural recovery toward level, weaker while the crew keeps leaning.

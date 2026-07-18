@@ -301,6 +301,11 @@ namespace DriftTogether.Coop
             Active?.HostSay(LineCategory.Portage, 15f);
         }
 
+        internal static void HostSayModules()
+        {
+            Active?.HostSay(LineCategory.Modules, 12f);
+        }
+
         void HostSpawnShoreLife()
         {
             var session = SessionManager.Instance;
@@ -648,6 +653,15 @@ namespace DriftTogether.Coop
                     : anchorState == AnchorState.Dragging
                         ? "Якорь ползёт! E — поднять"
                         : "E — поднять якорь");
+                return;
+            }
+            var freeSlot = Raft.NearSlot(own.transform.position, 1.1f);
+            if (freeSlot.HasValue)
+            {
+                int cost = ModuleSystem.CostOf(freeSlot.Value);
+                Hud.SetHint(Raft.Logs.Value >= cost
+                    ? $"E — построить «{ModuleSystem.NameOf(freeSlot.Value)}» ({cost} брёвен)"
+                    : $"Слот «{ModuleSystem.NameOf(freeSlot.Value)}»: нужно {cost} брёвен");
                 return;
             }
             if (Raft.NearestPost(own.transform.position, 1.4f) != RaftPost.None)

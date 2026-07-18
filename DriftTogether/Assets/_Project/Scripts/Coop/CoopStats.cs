@@ -32,6 +32,7 @@ namespace DriftTogether.Coop
         public int Capsizes;
         public int RaftLosses;
         public bool PortageUsed;
+        public int ModulesBuilt;
         public readonly List<PlayerRunStats> Players = new List<PlayerRunStats>();
 
         public void ChooseRoute(RiverRoute route)

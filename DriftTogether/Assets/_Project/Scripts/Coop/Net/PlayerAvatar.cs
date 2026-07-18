@@ -339,6 +339,14 @@ namespace DriftTogether.Coop.Net
                     return;
                 }
 
+                var slot = Raft.NearSlot(transform.position, 1.1f);
+                if (slot.HasValue &&
+                    Raft.Logs.Value >= ModuleSystem.CostOf(slot.Value))
+                {
+                    Raft.InstallModuleServerRpc((int)slot.Value);
+                    return;
+                }
+
                 RaftPost nearest = Raft.NearestPost(transform.position, 1.4f);
                 if (nearest != RaftPost.None)
                 {
@@ -451,7 +459,9 @@ namespace DriftTogether.Coop.Net
                 _hostWasAboard = true;
             }
 
-            bool nearFire = Vector3.Distance(transform.position, Raft.CampfireBowlPosition) < 3f ||
+            bool underCanopy = Raft.Modules.DryingEverywhere && _hostWasAboard;
+            bool nearFire = underCanopy ||
+                            Vector3.Distance(transform.position, Raft.CampfireBowlPosition) < 3f ||
                             CoopBootstrap.NearShoreCampfire(transform.position);
             WetTimer.Tick(dt, nearFire);
             if (stats != null && WetTimer.IsWet)
