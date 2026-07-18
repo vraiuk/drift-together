@@ -12,6 +12,7 @@ namespace DriftTogether.UI
     {
         RectTransform _menuPanel;
         RectTransform _settingsPanel;
+        Canvas _canvas;
 
         void Start()
         {
@@ -46,6 +47,7 @@ namespace DriftTogether.UI
         void BuildUI()
         {
             var canvas = UIBuilder.CreateCanvas("MenuCanvas");
+            _canvas = canvas;
 
             var bg = UIBuilder.CreatePanel(canvas.transform, "Backdrop", new Color(0.07f, 0.12f, 0.14f, 1f));
             UIBuilder.Stretch(bg);
@@ -68,9 +70,10 @@ namespace DriftTogether.UI
             _menuPanel = UIBuilder.CreateInvisiblePanel(canvas.transform, "Buttons");
             UIBuilder.Anchor(_menuPanel, new Vector2(0.5f, 0.5f), new Vector2(0f, -80f), new Vector2(400f, 320f));
 
-            CreateMenuButton("Играть", 100f, StartGame);
-            CreateMenuButton("Настройки", 20f, OpenSettings);
-            CreateMenuButton("Выход", -60f, QuitGame);
+            CreateMenuButton("Играть", 140f, StartGame);
+            CreateMenuButton("Кооператив — Сплав", 60f, OpenCoop);
+            CreateMenuButton("Настройки", -20f, OpenSettings);
+            CreateMenuButton("Выход", -100f, QuitGame);
 
             _settingsPanel = SettingsPanelBuilder.Build(canvas.transform, CloseSettings);
             _settingsPanel.gameObject.SetActive(false);
@@ -85,7 +88,16 @@ namespace DriftTogether.UI
             UIBuilder.Anchor((RectTransform)button.transform, new Vector2(0.5f, 0.5f), new Vector2(0f, y), new Vector2(360f, 68f));
         }
 
-        void StartGame() => SceneManager.LoadScene("River");
+        void StartGame()
+        {
+            Coop.CoopBootstrap.CoopRequested = false;
+            SceneManager.LoadScene("River");
+        }
+
+        void OpenCoop()
+        {
+            CoopMenuScreen.Show(_canvas != null ? _canvas.transform : transform, _menuPanel);
+        }
 
         void OpenSettings()
         {

@@ -1,0 +1,386 @@
+using DriftTogether.Core;
+using DriftTogether.World;
+using Unity.Netcode;
+using UnityEngine;
+
+namespace DriftTogether.Coop.Net
+{
+    /// <summary>
+    /// The crew raft. Physics and rules run on the host only; clients receive
+    /// the transform through NetworkTransform and mirror state via
+    /// NetworkVariables. Deck visuals are built in code on every peer.
+    /// </summary>
+    public sealed class RaftController : NetworkBehaviour
+    {
+        public const int MaxHull = 5;
+        public const float MaxSpeed = 5.5f;
+        public const float OarImpulse = 7.5f;
+        public const float OarYaw = 1.1f;
+        public const float RudderTorque = 1.9f;
+        public const float RepairHoldSeconds = 3f;
+        public const float RepairCooldown = 5f;
+        public const float HardHitImpulse = 4f;
+
+        public NetworkVariable<int> Hull = new NetworkVariable<int>(MaxHull);
+        public NetworkVariable<float> RudderAngle = new NetworkVariable<float>(0f);
+
+        public PostSystem Posts { get; } = new PostSystem();
+        public HullIntegrity Integrity { get; private set; }
+
+        public Vector3 CampfireBowlPosition => transform.TransformPoint(new Vector3(0f, 0.45f, 0.2f));
+
+        Rigidbody _body;
+        RiverFlow _flow;
+        CoopRunStats _stats;
+        Transform _visual;
+        Transform _postRudder;
+        Transform _postOarLeft;
+        Transform _postOarRight;
+        float _repairHold;
+        float _repairCooldown;
+        float _rudderInput;
+
+        public override void OnNetworkSpawn()
+        {
+            _body = GetComponent<Rigidbody>();
+            _body.useGravity = false;
+            _body.mass = 4f;
+            _body.linearDamping = 1.1f;
+            _body.angularDamping = 2.8f;
+            _body.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            _body.interpolation = RigidbodyInterpolation.Interpolate;
+            _body.isKinematic = !IsServer;
+
+            if (IsServer)
+                Integrity = new HullIntegrity(new GameClock(), MaxHull);
+
+            BuildVisuals();
+            CoopBootstrap.RegisterRaft(this);
+        }
+
+        public void HostAttach(RiverFlow flow, CoopRunStats stats)
+        {
+            _flow = flow;
+            _stats = stats;
+        }
+
+        void BuildVisuals()
+        {
+            if (_visual != null)
+                return;
+            _visual = new GameObject("Visual").transform;
+            _visual.SetParent(transform, false);
+
+            // Deck of logs.
+            for (int i = 0; i < 7; i++)
+            {
+                var log = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                log.name = "DeckLog";
+                log.transform.SetParent(_visual, false);
+                log.transform.localPosition = new Vector3(-1.65f + i * 0.55f, 0.1f, 0f);
+                log.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+                log.transform.localScale = new Vector3(0.52f, 1.55f, 0.52f);
+                GameMaterials.ApplyTo(log, "Wood");
+                Destroy(log.GetComponent<Collider>());
+            }
+
+            // Cross beams.
+            foreach (float z in new[] { -1.25f, 1.25f })
+            {
+                var beam = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                beam.name = "Beam";
+                beam.transform.SetParent(_visual, false);
+                beam.transform.localPosition = new Vector3(0f, 0.34f, z);
+                beam.transform.localScale = new Vector3(3.9f, 0.12f, 0.24f);
+                GameMaterials.ApplyTo(beam, "TreeTrunk");
+                Destroy(beam.GetComponent<Collider>());
+            }
+
+            // Campfire bowl in the middle.
+            var bowl = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            bowl.name = "FireBowl";
+            bowl.transform.SetParent(_visual, false);
+            bowl.transform.localPosition = new Vector3(0f, 0.36f, 0.2f);
+            bowl.transform.localScale = new Vector3(0.8f, 0.12f, 0.8f);
+            GameMaterials.ApplyTo(bowl, "Rock");
+            Destroy(bowl.GetComponent<Collider>());
+
+            var flame = new GameObject("BowlFlame");
+            flame.transform.SetParent(_visual, false);
+            flame.transform.localPosition = new Vector3(0f, 0.45f, 0.2f);
+            var flameFilter = flame.AddComponent<MeshFilter>();
+            flameFilter.mesh = MeshFactory.BuildCone(0.22f, 0.55f, 8);
+            flame.AddComponent<MeshRenderer>().sharedMaterial = GameMaterials.Get("FireGlow");
+
+            var fireLightGo = new GameObject("BowlLight");
+            fireLightGo.transform.SetParent(_visual, false);
+            fireLightGo.transform.localPosition = new Vector3(0f, 1f, 0.2f);
+            var fireLight = fireLightGo.AddComponent<Light>();
+            fireLight.type = LightType.Point;
+            fireLight.color = new Color(1f, 0.62f, 0.25f);
+            fireLight.intensity = 1.8f;
+            fireLight.range = 9f;
+            fireLightGo.AddComponent<FlickerLight>();
+
+            // Lantern mast at the bow.
+            var mast = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            mast.name = "Mast";
+            mast.transform.SetParent(_visual, false);
+            mast.transform.localPosition = new Vector3(0f, 1.05f, 1.35f);
+            mast.transform.localScale = new Vector3(0.09f, 0.75f, 0.09f);
+            GameMaterials.ApplyTo(mast, "Wood");
+            Destroy(mast.GetComponent<Collider>());
+
+            var lantern = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            lantern.name = "Lantern";
+            lantern.transform.SetParent(_visual, false);
+            lantern.transform.localPosition = new Vector3(0f, 1.85f, 1.35f);
+            lantern.transform.localScale = new Vector3(0.22f, 0.22f, 0.22f);
+            GameMaterials.ApplyTo(lantern, "FinishGlow");
+            Destroy(lantern.GetComponent<Collider>());
+
+            // Тапок-Тим on a barrel at the stern corner.
+            var barrel = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            barrel.name = "TimBarrel";
+            barrel.transform.SetParent(_visual, false);
+            barrel.transform.localPosition = new Vector3(1.2f, 0.45f, -1.1f);
+            barrel.transform.localScale = new Vector3(0.45f, 0.28f, 0.45f);
+            GameMaterials.ApplyTo(barrel, "Wood");
+            Destroy(barrel.GetComponent<Collider>());
+            BuildTimOnBarrel(barrel.transform);
+
+            // Rudder blade at the stern.
+            var rudder = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            rudder.name = "RudderBlade";
+            rudder.transform.SetParent(_visual, false);
+            rudder.transform.localPosition = new Vector3(0f, 0.15f, -1.85f);
+            rudder.transform.localScale = new Vector3(0.1f, 0.5f, 0.7f);
+            GameMaterials.ApplyTo(rudder, "KayakTrim");
+            Destroy(rudder.GetComponent<Collider>());
+            _rudderBlade = rudder.transform;
+
+            // Post markers.
+            _postRudder = CreatePostMarker("Post_Rudder", new Vector3(0f, 0.42f, -1.35f), 180f);
+            _postOarLeft = CreatePostMarker("Post_OarLeft", new Vector3(-1.55f, 0.42f, 0.35f), -90f);
+            _postOarRight = CreatePostMarker("Post_OarRight", new Vector3(1.55f, 0.42f, 0.35f), 90f);
+        }
+
+        Transform _rudderBlade;
+
+        void BuildTimOnBarrel(Transform barrel)
+        {
+            var tim = new GameObject("Tim");
+            tim.transform.SetParent(barrel, false);
+            tim.transform.localPosition = new Vector3(0f, 1.3f, 0f);
+            tim.transform.localScale = new Vector3(2.2f, 3.6f, 2.2f);
+
+            var sole = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            sole.transform.SetParent(tim.transform, false);
+            sole.transform.localScale = new Vector3(0.28f, 0.09f, 0.62f);
+            GameMaterials.ApplyTo(sole, "Slipper");
+            Destroy(sole.GetComponent<Collider>());
+
+            var toe = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            toe.transform.SetParent(tim.transform, false);
+            toe.transform.localPosition = new Vector3(0f, 0.1f, 0.18f);
+            toe.transform.localScale = new Vector3(0.26f, 0.2f, 0.34f);
+            GameMaterials.ApplyTo(toe, "Slipper");
+            Destroy(toe.GetComponent<Collider>());
+
+            foreach (float side in new[] { -1f, 1f })
+            {
+                var eye = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                eye.transform.SetParent(tim.transform, false);
+                eye.transform.localPosition = new Vector3(side * 0.07f, 0.24f, 0.16f);
+                eye.transform.localScale = new Vector3(0.09f, 0.11f, 0.09f);
+                GameMaterials.ApplyTo(eye, "EyeWhite");
+                Destroy(eye.GetComponent<Collider>());
+
+                var pupil = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                pupil.transform.SetParent(eye.transform, false);
+                pupil.transform.localPosition = new Vector3(0f, 0.05f, 0.35f);
+                pupil.transform.localScale = new Vector3(0.42f, 0.38f, 0.42f);
+                GameMaterials.ApplyTo(pupil, "EyePupil");
+                Destroy(pupil.GetComponent<Collider>());
+            }
+        }
+
+        Transform CreatePostMarker(string name, Vector3 localPos, float yaw)
+        {
+            var marker = new GameObject(name).transform;
+            marker.SetParent(transform, false);
+            marker.localPosition = localPos;
+            marker.localRotation = Quaternion.Euler(0f, yaw, 0f);
+
+            var plate = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            plate.name = "Plate";
+            plate.transform.SetParent(marker, false);
+            plate.transform.localPosition = new Vector3(0f, -0.3f, 0f);
+            plate.transform.localScale = new Vector3(0.7f, 0.03f, 0.7f);
+            GameMaterials.ApplyTo(plate, "KayakTrim");
+            Destroy(plate.GetComponent<Collider>());
+            return marker;
+        }
+
+        public Transform PostMarker(RaftPost post)
+        {
+            switch (post)
+            {
+                case RaftPost.Rudder: return _postRudder;
+                case RaftPost.OarLeft: return _postOarLeft;
+                case RaftPost.OarRight: return _postOarRight;
+                default: return null;
+            }
+        }
+
+        public RaftPost NearestPost(Vector3 position, float radius)
+        {
+            RaftPost best = RaftPost.None;
+            float bestDist = radius;
+            foreach (RaftPost post in new[] { RaftPost.Rudder, RaftPost.OarLeft, RaftPost.OarRight })
+            {
+                Transform marker = PostMarker(post);
+                if (marker == null)
+                    continue;
+                float d = Vector3.Distance(position, marker.position);
+                if (d < bestDist)
+                {
+                    bestDist = d;
+                    best = post;
+                }
+            }
+            return best;
+        }
+
+        public Vector3 DeckPoint(Vector3 localOffset) =>
+            transform.TransformPoint(localOffset + new Vector3(0f, 0.55f, 0f));
+
+        // ---------- Host physics ----------
+
+        void FixedUpdate()
+        {
+            if (!IsServer || _body == null)
+                return;
+            float dt = Time.fixedDeltaTime;
+
+            if (_flow != null)
+                _body.AddForce(_flow.CurrentAt(transform.position) * 1.05f, ForceMode.Acceleration);
+
+            // Rudder: torque grows with speed.
+            RudderAngle.Value = Mathf.MoveTowards(RudderAngle.Value, _rudderInput * 30f, 70f * dt);
+            float speedFactor = Mathf.Clamp01(_body.linearVelocity.magnitude / MaxSpeed) + 0.2f;
+            _body.AddTorque(Vector3.up * (RudderAngle.Value / 30f) * RudderTorque * speedFactor,
+                ForceMode.Acceleration);
+
+            float maxSpeed = Hull.Value <= 0 ? MaxSpeed * 0.5f : MaxSpeed;
+            Vector3 v = _body.linearVelocity;
+            v.y = 0f;
+            if (v.magnitude > maxSpeed)
+                v = v.normalized * maxSpeed;
+            _body.linearVelocity = new Vector3(v.x, 0f, v.z);
+
+            // Follow the water.
+            Vector3 pos = _body.position;
+            pos.y = Mathf.Lerp(pos.y, RiverFlow.WaterHeightAt(pos, Time.time) + 0.12f, dt * 5f);
+            _body.MovePosition(pos);
+
+            _repairCooldown -= dt;
+        }
+
+        void Update()
+        {
+            if (_rudderBlade != null)
+                _rudderBlade.localRotation = Quaternion.Euler(0f, -RudderAngle.Value, 0f);
+        }
+
+        void OnCollisionEnter(Collision collision)
+        {
+            if (!IsServer || Integrity == null)
+                return;
+            if (collision.collider.GetComponent<SoftSurface>() != null)
+                return;
+            float impulse = collision.impulse.magnitude / Mathf.Max(_body.mass, 0.01f);
+            if (impulse > HardHitImpulse && Integrity.ApplyHit())
+            {
+                Hull.Value = Integrity.Current;
+                if (_stats != null)
+                    _stats.RaftCollisions++;
+                CoopBootstrap.OnRaftHit(impulse);
+            }
+            else if (impulse > 1.2f)
+            {
+                CoopBootstrap.OnRaftBump(impulse);
+            }
+        }
+
+        public void HostRepairFull()
+        {
+            if (!IsServer || Integrity == null)
+                return;
+            Integrity.RestoreFull();
+            Hull.Value = Integrity.Current;
+        }
+
+        public void HostTeleport(Vector3 position, Quaternion rotation)
+        {
+            if (!IsServer)
+                return;
+            _body.linearVelocity = Vector3.zero;
+            _body.angularVelocity = Vector3.zero;
+            _body.position = position;
+            _body.rotation = rotation;
+            transform.SetPositionAndRotation(position, rotation);
+        }
+
+        // ---------- Post input RPCs ----------
+
+        [Rpc(SendTo.Server, RequireOwnership = false)]
+        public void SetRudderServerRpc(float steer, RpcParams rpcParams = default)
+        {
+            if (Posts.OccupantOf(RaftPost.Rudder) == rpcParams.Receive.SenderClientId)
+                _rudderInput = Mathf.Clamp(steer, -1f, 1f);
+        }
+
+        [Rpc(SendTo.Server, RequireOwnership = false)]
+        public void OarStrokeServerRpc(bool leftSide, bool reverse, RpcParams rpcParams = default)
+        {
+            ulong sender = rpcParams.Receive.SenderClientId;
+            RaftPost required = leftSide ? RaftPost.OarLeft : RaftPost.OarRight;
+            if (Posts.OccupantOf(required) != sender)
+                return;
+
+            float sign = reverse ? -0.55f : 1f;
+            _body.AddForce(transform.forward * OarImpulse * sign, ForceMode.Impulse);
+            _body.AddTorque(Vector3.up * (leftSide ? OarYaw : -OarYaw) * sign, ForceMode.Impulse);
+
+            var stats = _stats?.GetOrAdd(sender);
+            if (stats != null)
+                stats.OarStrokes++;
+
+            OarSplashClientRpc(leftSide);
+        }
+
+        [Rpc(SendTo.Server, RequireOwnership = false)]
+        public void RepairHoldServerRpc(RpcParams rpcParams = default)
+        {
+            if (Integrity == null || _repairCooldown > 0f || Integrity.Current >= Integrity.Max)
+                return;
+            _repairHold += Time.deltaTime * 1.5f; // called each held frame (~every Update)
+            if (_repairHold >= RepairHoldSeconds)
+            {
+                _repairHold = 0f;
+                _repairCooldown = RepairCooldown;
+                if (Integrity.RepairOne())
+                    Hull.Value = Integrity.Current;
+            }
+        }
+
+        [Rpc(SendTo.Everyone)]
+        void OarSplashClientRpc(bool leftSide)
+        {
+            var am = AudioManager.Instance;
+            if (am != null)
+                am.PlaySfx(am.PaddleStroke, 0.55f, Random.Range(0.85f, 1.05f));
+        }
+    }
+}

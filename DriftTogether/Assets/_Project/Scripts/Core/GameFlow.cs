@@ -44,6 +44,13 @@ namespace DriftTogether.Core
 
         void Start()
         {
+            // Co-op session in progress: hand the scene over to the raft flow.
+            if (Coop.CoopBootstrap.CoopRequested)
+            {
+                Coop.CoopBootstrap.Begin(gameObject);
+                return;
+            }
+
             Time.timeScale = 1f;
             AudioManager.Ensure();
             AudioManager.Instance.SetWaterPresence(1f);

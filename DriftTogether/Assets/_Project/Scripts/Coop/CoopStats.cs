@@ -28,6 +28,22 @@ namespace DriftTogether.Coop
         public int HullAtFinish;
         public readonly List<PlayerRunStats> Players = new List<PlayerRunStats>();
 
+        public void ChooseRoute(RiverRoute route)
+        {
+            if (route != RiverRoute.None)
+                ChosenRoute = route;
+        }
+
+        public string RouteDisplayName()
+        {
+            switch (ChosenRoute)
+            {
+                case RiverRoute.QuietChannel: return "Тихий канал";
+                case RiverRoute.NoisyStream: return "Шумный ручей";
+                default: return "—";
+            }
+        }
+
         public PlayerRunStats GetOrAdd(ulong clientId)
         {
             var found = Players.FirstOrDefault(p => p.ClientId == clientId);

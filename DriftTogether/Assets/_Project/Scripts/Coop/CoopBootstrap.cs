@@ -1,0 +1,492 @@
+using DriftTogether.Coop.Net;
+using DriftTogether.Core;
+using DriftTogether.Player;
+using DriftTogether.UI;
+using DriftTogether.World;
+using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+namespace DriftTogether.Coop
+{
+    /// <summary>
+    /// Scene-side orchestrator of a co-op run. Every peer builds the level
+    /// and UI locally; the host additionally spawns the raft and avatars and
+    /// runs the rules. Static surface is what networked components reach for.
+    /// </summary>
+    public sealed class CoopBootstrap : MonoBehaviour
+    {
+        /// <summary>Set by the co-op menu before the River scene loads.</summary>
+        public static bool CoopRequested;
+
+        /// <summary>Host-process checkpoint for «Отчалить с чекпоинта».</summary>
+        public static Vector3? SavedCheckpoint;
+        public static Quaternion SavedCheckpointRotation = Quaternion.identity;
+        public static bool StartFromCheckpoint;
+
+        public static CoopBootstrap Active { get; private set; }
+        public static RaftController Raft { get; private set; }
+        public static RiverFlow Flow { get; private set; }
+        public static CoopRunStats Stats { get; private set; }
+        public static HUD Hud { get; private set; }
+
+        LevelBuilder _level;
+        CameraRig _cameraRig;
+        PauseMenu _pauseMenu;
+        DialogueQueue _dialogue;
+        float _idleLineTimer = 30f;
+        float _nervousLineTimer = 10f;
+        bool _forkLineShown;
+        bool _finished;
+        bool _paused;
+
+        public static void Begin(GameObject sceneRoot)
+        {
+            sceneRoot.AddComponent<CoopBootstrap>();
+        }
+
+        void Start()
+        {
+            Active = this;
+            Time.timeScale = 1f;
+            AudioManager.Ensure();
+            AudioManager.Instance.SetWaterPresence(1f);
+            GameSettings.ApplyToListener();
+
+            // Deterministic decorations on every peer.
+            Random.InitState(12321);
+            _level = gameObject.AddComponent<LevelBuilder>();
+            _level.CoopMode = true;
+            _level.Build();
+            Flow = _level.Flow;
+
+            SetupCamera();
+            SetupUI();
+
+            var foam = gameObject.AddComponent<FoamDrifters>();
+            foam.Flow = Flow;
+            foam.FoamMaterial = GameMaterials.Get("Foam");
+
+            _dialogue = new DialogueQueue(new GameClock());
+
+            var session = SessionManager.Ensure();
+            session.ConnectionFailed += OnConnectionFailed;
+
+            var nm = NetworkManager.Singleton;
+            if (nm != null && nm.IsHost)
+                HostBegin();
+        }
+
+        void OnDestroy()
+        {
+            if (Active == this)
+                Active = null;
+            Raft = null;
+            Stats = null;
+            Hud = null;
+            Flow = null;
+            if (SessionManager.Instance != null)
+                SessionManager.Instance.ConnectionFailed -= OnConnectionFailed;
+        }
+
+        void OnConnectionFailed(string reason)
+        {
+            if (NetworkManager.Singleton != null && !NetworkManager.Singleton.IsHost)
+            {
+                SessionManager.Instance.Shutdown();
+                CoopRequested = false;
+                SceneManager.LoadScene("MainMenu");
+            }
+        }
+
+        void SetupCamera()
+        {
+            var cam = Camera.main;
+            if (cam == null)
+            {
+                var camGo = new GameObject("Main Camera") { tag = "MainCamera" };
+                cam = camGo.AddComponent<Camera>();
+                camGo.AddComponent<AudioListener>();
+            }
+            cam.clearFlags = CameraClearFlags.SolidColor;
+            cam.backgroundColor = RenderSettings.fogColor;
+            cam.farClipPlane = 220f;
+            _cameraRig = cam.GetComponent<CameraRig>();
+            if (_cameraRig == null)
+                _cameraRig = cam.gameObject.AddComponent<CameraRig>();
+        }
+
+        void SetupUI()
+        {
+            UIBuilder.EnsureEventSystem();
+            Hud = HUD.Create();
+            Hud.SetHullMax(RaftController.MaxHull);
+            Hud.SetHull(RaftController.MaxHull);
+            Hud.ShowCrewCounter(1);
+            Hud.SetWet(false);
+
+            CoopIntroHint.Create();
+
+            _pauseMenu = PauseMenu.Create();
+            _pauseMenu.OnContinue = TogglePause;
+            _pauseMenu.OnRestart = HostRestart;
+            _pauseMenu.OnMainMenu = LeaveToMenu;
+        }
+
+        public static void AttachCameraTo(Transform target)
+        {
+            if (Active == null || Active._cameraRig == null)
+                return;
+            Active._cameraRig.Target = target;
+            Active._cameraRig.SnapBehindTarget();
+        }
+
+        // ---------- Host side ----------
+
+        void HostBegin()
+        {
+            SessionManager.Instance.RaftLaunched = true;
+            Stats = new CoopRunStats();
+
+            Vector3 start = StartFromCheckpoint && SavedCheckpoint.HasValue
+                ? SavedCheckpoint.Value
+                : _level.KayakStartPosition;
+            Quaternion rot = StartFromCheckpoint && SavedCheckpoint.HasValue
+                ? SavedCheckpointRotation
+                : _level.KayakStartRotation;
+
+            var raftPrefab = SessionManager.Instance.LoadNetPrefab("Raft");
+            var raftGo = Instantiate(raftPrefab, start, rot);
+            raftGo.GetComponent<NetworkObject>().Spawn();
+            var raft = raftGo.GetComponent<RaftController>();
+            raft.HostAttach(Flow, Stats);
+
+            int colorIndex = 0;
+            foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+                SpawnAvatarFor(clientId, colorIndex++);
+
+            NetworkManager.Singleton.OnClientDisconnectCallback += HostOnClientLeft;
+
+            foreach (var gate in _level.RouteGates)
+                gate.Entered += route =>
+                {
+                    Stats.ChooseRoute(route);
+                    AudioManager.Instance.SetWaterPresence(route == RiverRoute.NoisyStream ? 1.3f : 0.8f);
+                };
+            foreach (var zone in _level.CheckpointZones)
+                zone.Reached += z =>
+                {
+                    SavedCheckpoint = z.RespawnPosition;
+                    SavedCheckpointRotation = z.RespawnRotation;
+                };
+            _level.Finish.Finished += HostOnFinish;
+
+            HostSay(LineCategory.Intro, 0f);
+        }
+
+        void SpawnAvatarFor(ulong clientId, int colorIndex)
+        {
+            var prefab = SessionManager.Instance.LoadNetPrefab("PlayerAvatar");
+            Vector3 local = new Vector3(-0.9f + (colorIndex % 2) * 1.8f, 0.55f,
+                0.6f - (colorIndex / 2) * 1.2f);
+            var go = Instantiate(prefab, Raft != null
+                ? Raft.DeckPoint(local)
+                : new Vector3(local.x, 0.6f, 4f + local.z), Quaternion.identity);
+            var avatar = go.GetComponent<PlayerAvatar>();
+            avatar.ColorIndex.Value = colorIndex;
+            go.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
+            Stats.GetOrAdd(clientId);
+        }
+
+        void HostOnClientLeft(ulong clientId)
+        {
+            if (Raft != null)
+                Raft.Posts.ReleaseAll(clientId);
+        }
+
+        internal static void RegisterRaft(RaftController raft)
+        {
+            Raft = raft;
+            if (Active != null && Active._finished == false && Raft != null &&
+                NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost &&
+                Stats != null)
+            {
+                Raft.HostAttach(Flow, Stats);
+            }
+        }
+
+        internal static void OnRaftHit(float impulse)
+        {
+            if (Active == null || Raft == null)
+                return;
+            var flow = Raft.GetComponent<CoopFlow>();
+            flow.RaftHitClientRpc(impulse);
+            Active.HostSay(LineCategory.Collision, 10f);
+        }
+
+        internal static void OnRaftBump(float impulse)
+        {
+            if (Raft == null)
+                return;
+            Raft.GetComponent<CoopFlow>().RaftBumpClientRpc();
+        }
+
+        internal static void OnOverboard(ulong clientId)
+        {
+            if (Active == null || Raft == null)
+                return;
+            Raft.GetComponent<CoopFlow>().SplashClientRpc();
+            Active.HostSay(LineCategory.NoisyNerves, 15f);
+        }
+
+        internal static bool NearShoreCampfire(Vector3 position)
+        {
+            if (Active == null || Active._level == null)
+                return false;
+            Vector3 fire = Active._level.CampfireRespawnPosition + new Vector3(7f, 0f, 0f);
+            Vector3 d = position - fire;
+            d.y = 0f;
+            return d.magnitude < 7f;
+        }
+
+        internal static void HostCampfireRest()
+        {
+            if (Active == null || Raft == null || NetworkManager.Singleton == null ||
+                !NetworkManager.Singleton.IsHost)
+                return;
+            var campfire = Active._level.Campfire;
+            if (campfire == null || campfire.HasRested)
+                return;
+            if (!campfire.PlayerInRange)
+                return; // the raft must actually be moored at the pier
+            campfire.Rest();
+            Raft.HostRepairFull();
+            SavedCheckpoint = Active._level.CampfireRespawnPosition;
+            SavedCheckpointRotation = Active._level.CampfireRespawnRotation;
+            Raft.GetComponent<CoopFlow>().CampfireRestClientRpc();
+            Active.HostSay(LineCategory.Campfire, 0f);
+        }
+
+        void HostOnFinish()
+        {
+            if (_finished || Stats == null || Raft == null)
+                return;
+            _finished = true;
+            Stats.HullAtFinish = Raft.Hull.Value;
+            HostSay(LineCategory.Finish, 0f);
+            Raft.GetComponent<CoopFlow>().FinishClientRpc(CoopReportPayload.From(Stats));
+        }
+
+        void HostSay(LineCategory category, float cooldown)
+        {
+            if (Raft == null || !TimLines.ByCategory.TryGetValue(category, out var variants))
+                return;
+            if (_dialogue.TryEnqueue(category, variants,
+                    cooldown <= 0f ? 0.01f : cooldown) &&
+                _dialogue.TryDequeue(out string line))
+            {
+                Raft.GetComponent<CoopFlow>().TimLineClientRpc(line);
+            }
+        }
+
+        // ---------- Shared update ----------
+
+        void Update()
+        {
+            var nm = NetworkManager.Singleton;
+            if (nm == null)
+                return;
+
+            if (Hud != null && Raft != null)
+            {
+                Hud.SetHull(Raft.Hull.Value);
+                int crew = 0;
+                foreach (var _ in FindObjectsByType<PlayerAvatar>(FindObjectsSortMode.None))
+                    crew++;
+                Hud.ShowCrewCounter(Mathf.Max(crew, 1));
+
+                var own = OwnAvatar();
+                Hud.SetWet(own != null && own.Wet.Value);
+                UpdateHints(own);
+            }
+
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (kb != null && kb.escapeKey.wasPressedThisFrame)
+                TogglePause();
+
+            if (nm.IsHost && !_finished && Stats != null)
+            {
+                Stats.ElapsedSeconds += Time.deltaTime;
+                HostChatter();
+            }
+        }
+
+        PlayerAvatar OwnAvatar()
+        {
+            var nm = NetworkManager.Singleton;
+            if (nm == null || nm.LocalClient == null || nm.LocalClient.PlayerObject == null)
+                return null;
+            return nm.LocalClient.PlayerObject.GetComponent<PlayerAvatar>();
+        }
+
+        void UpdateHints(PlayerAvatar own)
+        {
+            if (own == null || Raft == null)
+            {
+                Hud.SetHint("");
+                return;
+            }
+            if (own.IsSwimming)
+            {
+                Hud.SetHint(Vector3.Distance(own.transform.position, Raft.transform.position) <
+                            PlayerAvatar.BoardRange + 2.2f
+                    ? "E — залезть на плот"
+                    : "Плывите к плоту");
+                return;
+            }
+            if ((RaftPost)own.PostIndex.Value != RaftPost.None)
+            {
+                switch ((RaftPost)own.PostIndex.Value)
+                {
+                    case RaftPost.Rudder:
+                        Hud.SetHint("A/D — руль · E — отойти");
+                        break;
+                    default:
+                        Hud.SetHint("W — гребок, S — табань · E — отойти");
+                        break;
+                }
+                return;
+            }
+            if (Raft.NearestPost(own.transform.position, 1.4f) != RaftPost.None)
+            {
+                Hud.SetHint("E — встать к посту");
+                return;
+            }
+            if (Vector3.Distance(own.transform.position, Raft.CampfireBowlPosition) < 1.6f &&
+                Raft.Hull.Value < RaftController.MaxHull)
+            {
+                Hud.SetHint("Держите E — ремонт плота");
+                return;
+            }
+            var campfire = _level.Campfire;
+            if (campfire != null && campfire.PlayerInRange && !campfire.HasRested &&
+                NearShoreCampfire(own.transform.position))
+            {
+                Hud.SetHint("E — отдохнуть у костра (чекпоинт)");
+                return;
+            }
+            Hud.SetHint("");
+        }
+
+        void HostChatter()
+        {
+            if (Raft == null)
+                return;
+            float z = Raft.transform.position.z;
+            if (!_forkLineShown && z > 190f && z < 230f)
+            {
+                _forkLineShown = true;
+                HostSay(LineCategory.Fork, 0f);
+            }
+
+            if (_level.NoisyZone != null && _level.NoisyZone.PlayerInside)
+            {
+                _nervousLineTimer -= Time.deltaTime;
+                if (_nervousLineTimer <= 0f)
+                {
+                    _nervousLineTimer = 12f;
+                    HostSay(LineCategory.NoisyNerves, 10f);
+                }
+            }
+
+            _idleLineTimer -= Time.deltaTime;
+            if (_idleLineTimer <= 0f)
+            {
+                _idleLineTimer = 50f;
+                HostSay(LineCategory.Idle, 45f);
+            }
+        }
+
+        // ---------- Pause / navigation ----------
+
+        void TogglePause()
+        {
+            _paused = !_paused;
+            if (_paused)
+                _pauseMenu.Open();
+            else
+                _pauseMenu.Close();
+            // Network time keeps flowing; the menu is local-only.
+        }
+
+        void HostRestart()
+        {
+            var nm = NetworkManager.Singleton;
+            if (nm != null && nm.IsHost)
+            {
+                StartFromCheckpoint = false;
+                nm.SceneManager.LoadScene("River", LoadSceneMode.Single);
+            }
+            else
+            {
+                TogglePause();
+            }
+        }
+
+        public void LeaveToMenu()
+        {
+            CoopRequested = false;
+            StartFromCheckpoint = false;
+            if (SessionManager.Instance != null)
+                SessionManager.Instance.Shutdown();
+            Time.timeScale = 1f;
+            SceneManager.LoadScene("MainMenu");
+        }
+
+        // ---------- Called by CoopFlow client RPCs ----------
+
+        internal void ClientRaftHit(float impulse)
+        {
+            var am = AudioManager.Instance;
+            if (am != null)
+                am.PlaySfx(am.Collision, Mathf.Clamp01(impulse / 10f) * 0.6f + 0.35f);
+            _cameraRig?.Shake(0.6f);
+        }
+
+        internal void ClientRaftBump()
+        {
+            var am = AudioManager.Instance;
+            if (am != null)
+                am.PlaySfx(am.SoftBump, 0.35f);
+        }
+
+        internal void ClientSplash()
+        {
+            var am = AudioManager.Instance;
+            if (am != null)
+                am.PlaySfx(am.PaddleStroke, 0.9f, 0.7f);
+        }
+
+        internal void ClientCampfireRest()
+        {
+            var am = AudioManager.Instance;
+            if (am != null)
+                am.PlaySfx(am.CampfireRest, 0.9f);
+        }
+
+        internal void ClientTimLine(string line)
+        {
+            Hud?.EnqueueSubtitle(line);
+        }
+
+        internal void ClientFinish(CoopReportPayload payload)
+        {
+            _finished = true;
+            var am = AudioManager.Instance;
+            if (am != null)
+                am.PlaySfx(am.Finish, 0.9f);
+            bool isHost = NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost;
+            CoopReportScreen.Show(payload, isHost, HostRestart, LeaveToMenu);
+        }
+    }
+}

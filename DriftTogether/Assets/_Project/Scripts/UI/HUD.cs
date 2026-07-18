@@ -77,9 +77,48 @@ namespace DriftTogether.UI
                     : new Color(0.25f, 0.3f, 0.3f, 0.7f);
         }
 
+        /// <summary>Rebuilds the pip row for a different maximum (co-op raft = 5).</summary>
+        public void SetHullMax(int max)
+        {
+            if (_hullPips.Count == max)
+                return;
+            var parent = (RectTransform)_hullPips[0].transform.parent;
+            foreach (var pip in _hullPips)
+                Destroy(pip.gameObject);
+            _hullPips.Clear();
+            for (int i = 0; i < max; i++)
+            {
+                var pip = UIBuilder.CreatePanel(parent, $"Pip{i}", UIBuilder.Accent);
+                UIBuilder.Anchor(pip, new Vector2(0f, 0.5f), new Vector2(i * 52f, 0f), new Vector2(42f, 26f));
+                _hullPips.Add(pip.GetComponent<Image>());
+            }
+        }
+
+        /// <summary>Toggles the «мокрый» indicator (co-op).</summary>
+        public void SetWet(bool wet)
+        {
+            if (_wetBadge == null)
+            {
+                var badge = UIBuilder.CreatePanel(transform, "WetBadge", new Color(0.25f, 0.55f, 0.8f, 0.85f));
+                UIBuilder.Anchor(badge, new Vector2(0f, 1f), new Vector2(28f, -92f), new Vector2(160f, 36f));
+                var label = UIBuilder.CreateText(badge, "Label", "МОКРЫЙ", 22, Color.white);
+                UIBuilder.Stretch(label.rectTransform);
+                _wetBadge = badge.gameObject;
+            }
+            _wetBadge.SetActive(wet);
+        }
+
+        GameObject _wetBadge;
+
         public void SetMushrooms(int count)
         {
             _mushroomText.text = $"Грибы {Mathf.Min(count, MushroomTracker.Goal)}/{MushroomTracker.Goal}";
+        }
+
+        /// <summary>Co-op has no mushrooms — the counter shows the crew size instead.</summary>
+        public void ShowCrewCounter(int players)
+        {
+            _mushroomText.text = $"Команда: {players}";
         }
 
         public void SetHint(string hint) => _hintText.text = hint ?? "";

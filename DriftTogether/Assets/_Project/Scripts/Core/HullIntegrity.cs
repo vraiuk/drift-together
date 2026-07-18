@@ -45,6 +45,16 @@ namespace DriftTogether.Core
             return true;
         }
 
+        /// <summary>Repairs a single point (co-op raft campfire bowl).</summary>
+        public bool RepairOne()
+        {
+            if (Current >= Max)
+                return false;
+            Current++;
+            Changed?.Invoke(Current);
+            return true;
+        }
+
         public void RestoreFull()
         {
             if (Current == Max)

@@ -5,6 +5,8 @@
         "Unity.InputSystem",
         "Unity.RenderPipelines.Universal.Runtime",
         "Unity.Netcode.Runtime",
+        "Unity.Netcode.Components",
+        "Unity.Collections",
         "Unity.Networking.Transport",
         "Unity.Services.Core",
         "Unity.Services.Authentication",

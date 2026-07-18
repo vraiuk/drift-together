@@ -23,8 +23,7 @@ namespace DriftTogether.World
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.attachedRigidbody == null ||
-                other.attachedRigidbody.GetComponent<Player.KayakController>() == null)
+            if (!Campfire.IsKayak(other))
                 return;
             PickedUp?.Invoke(this);
         }
@@ -51,8 +50,10 @@ namespace DriftTogether.World
 
         internal static bool IsKayak(Collider other)
         {
-            return other.attachedRigidbody != null &&
-                   other.attachedRigidbody.GetComponent<Player.KayakController>() != null;
+            if (other.attachedRigidbody == null)
+                return false;
+            return other.attachedRigidbody.GetComponent<Player.KayakController>() != null ||
+                   other.attachedRigidbody.GetComponent<Coop.Net.RaftController>() != null;
         }
 
         public void Rest()
@@ -71,8 +72,7 @@ namespace DriftTogether.World
 
         void OnTriggerEnter(Collider other)
         {
-            if (_fired || other.attachedRigidbody == null ||
-                other.attachedRigidbody.GetComponent<Player.KayakController>() == null)
+            if (_fired || !Campfire.IsKayak(other))
                 return;
             _fired = true;
             Entered?.Invoke(Route);
@@ -87,8 +87,7 @@ namespace DriftTogether.World
 
         void OnTriggerEnter(Collider other)
         {
-            if (_fired || other.attachedRigidbody == null ||
-                other.attachedRigidbody.GetComponent<Player.KayakController>() == null)
+            if (_fired || !Campfire.IsKayak(other))
                 return;
             _fired = true;
             Finished?.Invoke();
@@ -105,8 +104,7 @@ namespace DriftTogether.World
 
         void OnTriggerEnter(Collider other)
         {
-            if (_fired || other.attachedRigidbody == null ||
-                other.attachedRigidbody.GetComponent<Player.KayakController>() == null)
+            if (_fired || !Campfire.IsKayak(other))
                 return;
             _fired = true;
             Reached?.Invoke(this);

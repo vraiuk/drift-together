@@ -31,6 +31,7 @@ namespace DriftTogether.EditorTools
                 SetupUrp();
                 CreateMaterials();
                 CreateScenes();
+                CreateCoopPrefabs();
                 SetupBuildScenes();
                 AssetDatabase.SaveAssets();
                 Debug.Log("[Configurator] done");
@@ -213,6 +214,37 @@ namespace DriftTogether.EditorTools
             EditorSceneManager.SaveScene(riverScene, ScenesDir + "/River.unity");
 
             Debug.Log("[Configurator] scenes created");
+        }
+
+        static void CreateCoopPrefabs()
+        {
+            const string netDir = "Assets/_Project/Art/Resources/Net";
+            EnsureFolder(netDir);
+
+            // Raft: host-driven physics body; visuals are built at runtime.
+            var raft = new GameObject("Raft");
+            var body = raft.AddComponent<Rigidbody>();
+            body.mass = 4f;
+            body.useGravity = false;
+            var box = raft.AddComponent<BoxCollider>();
+            box.center = new Vector3(0f, 0.25f, 0f);
+            box.size = new Vector3(4f, 0.5f, 3.4f);
+            raft.AddComponent<Unity.Netcode.NetworkObject>();
+            raft.AddComponent<Unity.Netcode.Components.NetworkTransform>();
+            raft.AddComponent<DriftTogether.Coop.Net.RaftController>();
+            raft.AddComponent<DriftTogether.Coop.Net.CoopFlow>();
+            PrefabUtility.SaveAsPrefabAsset(raft, netDir + "/Raft.prefab");
+            UnityEngine.Object.DestroyImmediate(raft);
+
+            // Player avatar: owner-authoritative, no collider (raycast-based motor).
+            var avatar = new GameObject("PlayerAvatar");
+            avatar.AddComponent<Unity.Netcode.NetworkObject>();
+            avatar.AddComponent<DriftTogether.Coop.Net.OwnerNetworkTransform>();
+            avatar.AddComponent<DriftTogether.Coop.Net.PlayerAvatar>();
+            PrefabUtility.SaveAsPrefabAsset(avatar, netDir + "/PlayerAvatar.prefab");
+            UnityEngine.Object.DestroyImmediate(avatar);
+
+            Debug.Log("[Configurator] co-op network prefabs created");
         }
 
         static void SetupBuildScenes()

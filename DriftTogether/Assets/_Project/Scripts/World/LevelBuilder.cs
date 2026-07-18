@@ -11,6 +11,9 @@ namespace DriftTogether.World
     /// </summary>
     public sealed class LevelBuilder : MonoBehaviour
     {
+        /// <summary>Co-op raft mode: no mushrooms, no cross-channel logs (raft clearance).</summary>
+        public bool CoopMode;
+
         public RiverFlow Flow { get; private set; }
         public RiverSpline UpperSpline { get; private set; }
         public RiverSpline QuietSpline { get; private set; }
@@ -274,9 +277,13 @@ namespace DriftTogether.World
             SpawnShallow(new Vector3(-6.2f, 0f, 170f), 2.2f);
 
             // Quiet channel: logs and hanging roots, fewer dangers.
-            SpawnLog(new Vector3(-21f, 0f, 312f), 25f, 5.5f);
-            SpawnLog(new Vector3(-31f, 0f, 362f), -20f, 5f);
-            SpawnLog(new Vector3(-16f, 0f, 436f), 40f, 4.5f);
+            // (No cross-channel logs in co-op — the raft needs the clearance.)
+            if (!CoopMode)
+            {
+                SpawnLog(new Vector3(-21f, 0f, 312f), 25f, 5.5f);
+                SpawnLog(new Vector3(-31f, 0f, 362f), -20f, 5f);
+                SpawnLog(new Vector3(-16f, 0f, 436f), 40f, 4.5f);
+            }
             for (int i = 0; i < 7; i++)
             {
                 float d = 40f + i * 30f;
@@ -320,6 +327,8 @@ namespace DriftTogether.World
 
         void BuildMushrooms()
         {
+            if (CoopMode)
+                return;
             (int id, Vector3 pos)[] mushrooms =
             {
                 (1, new Vector3(1.5f, 0f, 62f)),
