@@ -1,0 +1,73 @@
+Mono path[0] = '/Users/vraiuk/WebstormProjects/drift-together/Builds/macOS/DriftTogether.app/Contents/Resources/Data/Managed'
+Mono config path = '/Users/vraiuk/WebstormProjects/drift-together/Builds/macOS/DriftTogether.app/Contents/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.3.20f1 (c9ba695d4f07)
+[Subsystems] Discovering subsystems at path /Users/vraiuk/WebstormProjects/drift-together/Builds/macOS/DriftTogether.app/Contents/Resources/Data/UnitySubsystems
+GfxDevice: creating device client; kGfxThreadingModeThreaded
+ preferred device: Apple M3 Max (high power)
+Metal devices available: 1
+0: Apple M3 Max (high power)
+Using device Apple M3 Max (high power)
+Initializing Metal device caps: Apple M3 Max
+Mac GPU Family: 2
+Apple GPU Family: 9
+MSL Version: 3.0
+Has Float MSAA: 1
+Has Float Filtering: 1
+ReadWrite Texture Tier: 2
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.142 seconds
+- Finished resetting the current domain, in  0.002 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Metal RecreateSurface[0xb1721ca80]: surface size 3024x1898
+UnloadTime: 0.742750 ms
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 3.459666 ms
+[SmokeCoop] pos=(0.00, 0.00, 4.00) wp=0/111 hull=5 vel=0.0
+Unloading 7 unused Assets to reduce memory usage. Loaded Objects now: 6198.
+Total: 1.306166 ms (FindLiveObjects: 0.131125 ms CreateObjectMapping: 0.038541 ms MarkObjects: 1.123750 ms  DeleteObjects: 0.012709 ms)
+
+[SmokeCoop] pos=(4.65, 0.12, 165.06) wp=29/111 hull=4 vel=5.6
+[SmokeCoop] pos=(24.18, 0.10, 381.24) wp=59/111 hull=0 vel=0.1
+[SmokeCoop] pos=(3.72, 0.15, 526.89) wp=79/111 hull=5 vel=3.2
+[SmokeCoop] pos=(5.92, 0.16, 529.25) wp=79/111 hull=5 vel=5.6
+[SmokeCoop] pos=(9.57, 0.09, 525.76) wp=79/111 hull=5 vel=0.9
+[SmokeCoop] pos=(2.94, 0.14, 527.17) wp=79/111 hull=5 vel=4.0
+[SmokeCoop] pos=(8.21, 0.21, 528.72) wp=79/111 hull=5 vel=3.3
+[SmokeCoop] pos=(10.26, 0.18, 528.14) wp=79/111 hull=5 vel=1.2
+[SmokeCoop] pos=(6.88, 0.08, 530.70) wp=79/111 hull=5 vel=0.0
+[SmokeCoop] pos=(6.79, 0.10, 530.66) wp=79/111 hull=5 vel=0.7
+[SmokeCoop] pos=(9.42, 0.08, 526.59) wp=79/111 hull=5 vel=4.7
+[SmokeCoop] pos=(0.74, 0.04, 526.60) wp=79/111 hull=5 vel=1.1
+[SmokeCoop] pos=(9.79, 0.12, 528.43) wp=80/111 hull=5 vel=1.5
+[SmokeCoop] pos=(4.60, 0.16, 530.70) wp=80/111 hull=5 vel=0.6
+[SmokeCoop] pos=(4.82, 0.22, 530.70) wp=80/111 hull=5 vel=0.0
+[SmokeCoop] pos=(4.80, 0.13, 530.70) wp=80/111 hull=5 vel=0.0
+[SmokeCoop] pos=(1.43, 0.19, 526.04) wp=80/111 hull=5 vel=1.6
+[SmokeCoop] pos=(0.51, 0.06, 742.09) wp=110/111 hull=3 vel=5.6
+[SmokeCoop] result written to /Users/vraiuk/Library/Application Support/DriftTogether/Drift Together/smoke_result.json: {
+  "success": true,
+  "mode": "coop",
+  "elapsedGameSeconds": 1345.1,
+  "route": "NoisyStream",
+  "raftCollisions": 7,
+  "hullAtFinish": 3,
+  "realSeconds": 270.4
+}
+Thread 0x16fd97000 may have been prematurely finalized
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input System polling thread exited.
+Input System module state changed to: Shutdown.
+Thread 0x16e5c7000 may have been prematurely finalized
+Thread 0x16e53b000 may have been prematurely finalized
+Thread 0x16e653000 may have been prematurely finalized
+Thread 0x16e6df000 may have been prematurely finalized

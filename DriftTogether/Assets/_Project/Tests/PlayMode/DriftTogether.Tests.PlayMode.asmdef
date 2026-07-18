@@ -4,6 +4,9 @@
     "references": [
         "DriftTogether.Runtime",
         "Unity.Netcode.Runtime",
+        "Unity.Services.Core",
+        "Unity.Services.Authentication",
+        "Unity.Services.Relay",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],
