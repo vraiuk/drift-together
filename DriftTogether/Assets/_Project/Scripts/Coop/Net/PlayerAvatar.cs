@@ -98,11 +98,25 @@ namespace DriftTogether.Coop.Net
                     pos += CoopBootstrap.Flow.CurrentAt(pos) * (dt * 0.5f);
                 pos.y = Mathf.Lerp(pos.y, water - 0.45f, dt * 5f);
 
-                if (Raft != null && kb != null && kb.eKey.wasPressedThisFrame &&
-                    Vector3.Distance(pos, Raft.transform.position) < BoardRange + 2.2f)
+                if (Raft != null && kb != null && kb.eKey.wasPressedThisFrame)
                 {
-                    pos = Raft.DeckPoint(Vector3.zero);
-                    IsSwimming = false;
+                    // Priorities in the water: crate → righting → boarding.
+                    var crate = NearestCrate(pos);
+                    if (crate != null)
+                    {
+                        crate.GrabServerRpc();
+                    }
+                    else if (Raft.Capsized.Value &&
+                             Vector3.Distance(pos, Raft.transform.position) < BoardRange + 2.6f)
+                    {
+                        Raft.RightingEffortServerRpc();
+                    }
+                    else if (!Raft.Capsized.Value &&
+                             Vector3.Distance(pos, Raft.transform.position) < BoardRange + 2.2f)
+                    {
+                        pos = Raft.DeckPoint(Vector3.zero);
+                        IsSwimming = false;
+                    }
                 }
             }
             else
@@ -294,6 +308,30 @@ namespace DriftTogether.Coop.Net
             {
                 Raft.RepairHoldServerRpc();
             }
+        }
+
+        internal static FloatingCrate NearestCrate(Vector3 position)
+        {
+            FloatingCrate best = null;
+            float bestDist = FloatingCrate.GrabRange;
+            foreach (var crate in FindObjectsByType<FloatingCrate>(FindObjectsSortMode.None))
+            {
+                float d = Vector3.Distance(crate.transform.position, position);
+                if (d < bestDist)
+                {
+                    bestDist = d;
+                    best = crate;
+                }
+            }
+            return best;
+        }
+
+        /// <summary>Host order: this avatar was thrown into the water (capsize).</summary>
+        public void ForceIntoWater(Vector3 splashPos)
+        {
+            if (!IsServer)
+                return;
+            TeleportClientRpc(splashPos, RpcTarget.Single(OwnerClientId, RpcTargetUse.Temp));
         }
 
         PlayerAvatar FindNearestOtherAvatar()

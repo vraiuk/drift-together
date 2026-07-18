@@ -14,7 +14,8 @@ namespace DriftTogether.Core
         NoisyNerves,
         Idle,
         Respawn,
-        Fishing
+        Fishing,
+        Capsize
     }
 
     /// <summary>

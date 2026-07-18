@@ -27,6 +27,7 @@ namespace DriftTogether.Coop
         public RiverRoute ChosenRoute = RiverRoute.None;
         public int RaftCollisions;
         public int HullAtFinish;
+        public int Capsizes;
         public readonly List<PlayerRunStats> Players = new List<PlayerRunStats>();
 
         public void ChooseRoute(RiverRoute route)

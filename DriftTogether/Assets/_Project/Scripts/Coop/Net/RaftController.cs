@@ -25,6 +25,11 @@ namespace DriftTogether.Coop.Net
         public NetworkVariable<float> RudderAngle = new NetworkVariable<float>(0f);
         /// <summary>Shared food store (fish and foraged supplies).</summary>
         public NetworkVariable<int> Food = new NetworkVariable<int>(0);
+        public NetworkVariable<bool> Capsized = new NetworkVariable<bool>(false);
+        public NetworkVariable<float> TiltSync = new NetworkVariable<float>(0f);
+
+        /// <summary>Host-side balance model (UC-08).</summary>
+        public CapsizeSystem Balance { get; } = new CapsizeSystem();
 
         public PostSystem Posts { get; } = new PostSystem();
         public HullIntegrity Integrity { get; private set; }
@@ -349,6 +354,22 @@ namespace DriftTogether.Coop.Net
             if (_flow != null)
                 _body.AddForce(_flow.CurrentAt(transform.position) * 1.05f, ForceMode.Acceleration);
 
+            UpdateBalance(dt);
+
+            if (Capsized.Value)
+            {
+                // Flipped raft only drifts; no propulsion, no steering.
+                Vector3 cv = _body.linearVelocity;
+                cv.y = 0f;
+                if (cv.magnitude > 1.6f)
+                    _body.linearVelocity = cv.normalized * 1.6f;
+                Vector3 cpos = _body.position;
+                cpos.y = Mathf.Lerp(cpos.y, RiverFlow.WaterHeightAt(cpos, Time.time) + 0.05f, dt * 5f);
+                _body.MovePosition(cpos);
+                _repairCooldown -= dt;
+                return;
+            }
+
             if (Mathf.Abs(AutoThrust) > 0.01f)
             {
                 _body.AddForce(transform.forward * AutoThrust * 9f, ForceMode.Acceleration);
@@ -382,6 +403,109 @@ namespace DriftTogether.Coop.Net
         {
             if (_rudderBlade != null)
                 _rudderBlade.localRotation = Quaternion.Euler(0f, -RudderAngle.Value, 0f);
+
+            // Balance presentation on every peer: heel with the tilt, flip when capsized.
+            if (_visual != null)
+            {
+                Quaternion target = Capsized.Value
+                    ? Quaternion.Euler(0f, 0f, 180f)
+                    : Quaternion.Euler(0f, 0f, -TiltSync.Value * 26f);
+                _visual.localRotation = Quaternion.Slerp(_visual.localRotation, target,
+                    Time.deltaTime * (Capsized.Value ? 3.5f : 6f));
+            }
+        }
+
+        readonly System.Collections.Generic.List<float> _crewX =
+            new System.Collections.Generic.List<float>(4);
+
+        void UpdateBalance(float dt)
+        {
+            _crewX.Clear();
+            foreach (var avatar in FindObjectsByType<PlayerAvatar>(FindObjectsSortMode.None))
+            {
+                Vector3 local = transform.InverseTransformPoint(avatar.transform.position);
+                bool aboard = Mathf.Abs(local.x) < 2.4f && Mathf.Abs(local.z) < 2.1f &&
+                              local.y > -0.2f && local.y < 1.6f;
+                if (aboard)
+                    _crewX.Add(local.x);
+            }
+
+            bool fastWater = _flow != null &&
+                             _flow.CurrentAt(transform.position).magnitude > 2f;
+            bool wasCapsized = Balance.Capsized;
+            Balance.Tick(dt, _crewX, fastWater);
+            TiltSync.Value = Balance.Tilt;
+
+            if (Balance.Capsized && !wasCapsized)
+                HostDoCapsize();
+            if (!Balance.Capsized && Capsized.Value)
+                HostDoRighted();
+        }
+
+        void HostDoCapsize()
+        {
+            Capsized.Value = true;
+            _rudderInput = 0f;
+            foreach (RaftPost post in new[] { RaftPost.Rudder, RaftPost.OarLeft, RaftPost.OarRight })
+            {
+                ulong? occupant = Posts.OccupantOf(post);
+                if (occupant.HasValue)
+                    Posts.Release(post, occupant.Value);
+            }
+
+            if (_stats != null)
+                _stats.Capsizes++;
+
+            // Часть еды уплывает ящиками — какие успеете выловить.
+            int lost = CapsizeSystem.FoodLost(Food.Value);
+            Food.Value -= lost;
+            var cratePrefab = SessionManager.Instance != null
+                ? SessionManager.Instance.LoadNetPrefab("Crate")
+                : null;
+            for (int i = 0; i < lost && cratePrefab != null; i++)
+            {
+                Vector3 pos = transform.position + new Vector3(
+                    Random.Range(-3f, 3f), 0f, Random.Range(1f, 4f));
+                var crate = Instantiate(cratePrefab, pos, Quaternion.identity);
+                crate.GetComponent<NetworkObject>().Spawn(true);
+            }
+
+            // Экипаж — в воду, по обе стороны от плота.
+            int side = 0;
+            foreach (var avatar in FindObjectsByType<PlayerAvatar>(FindObjectsSortMode.None))
+            {
+                Vector3 local = transform.InverseTransformPoint(avatar.transform.position);
+                if (Mathf.Abs(local.x) < 2.6f && Mathf.Abs(local.z) < 2.4f)
+                {
+                    Vector3 splash = transform.position +
+                                     transform.right * (side % 2 == 0 ? 3.4f : -3.4f) +
+                                     transform.forward * Random.Range(-1f, 1f);
+                    splash.y = RiverFlow.WaterHeightAt(splash, Time.time) - 0.4f;
+                    avatar.ForceIntoWater(splash);
+                    side++;
+                }
+            }
+
+            GetComponent<CoopFlow>().CapsizedClientRpc();
+            CoopBootstrap.HostSayCapsize();
+        }
+
+        void HostDoRighted()
+        {
+            Capsized.Value = false;
+            GetComponent<CoopFlow>().RightedClientRpc();
+        }
+
+        [Rpc(SendTo.Server, RequireOwnership = false)]
+        public void RightingEffortServerRpc(RpcParams p = default)
+        {
+            if (!Capsized.Value)
+                return;
+            Balance.AddRightingEffort(1f);
+            if (!Balance.Capsized)
+                HostDoRighted();
+            else
+                GetComponent<CoopFlow>().RaftBumpClientRpc();
         }
 
         void OnCollisionEnter(Collision collision)
@@ -391,6 +515,13 @@ namespace DriftTogether.Coop.Net
             if (collision.collider.GetComponent<SoftSurface>() != null)
                 return;
             float impulse = collision.impulse.magnitude / Mathf.Max(_body.mass, 0.01f);
+            if (impulse > HardHitImpulse)
+            {
+                float sideSign = collision.contactCount > 0
+                    ? Mathf.Sign(transform.InverseTransformPoint(collision.GetContact(0).point).x)
+                    : 1f;
+                Balance.ApplyHitKick(sideSign);
+            }
             if (impulse > HardHitImpulse && Integrity.ApplyHit())
             {
                 Hull.Value = Integrity.Current;
@@ -428,6 +559,8 @@ namespace DriftTogether.Coop.Net
         [Rpc(SendTo.Server, RequireOwnership = false)]
         public void SetRudderServerRpc(float steer, RpcParams rpcParams = default)
         {
+            if (Capsized.Value)
+                return;
             if (Posts.OccupantOf(RaftPost.Rudder) == rpcParams.Receive.SenderClientId)
                 _rudderInput = Mathf.Clamp(steer, -1f, 1f);
         }
@@ -435,6 +568,8 @@ namespace DriftTogether.Coop.Net
         [Rpc(SendTo.Server, RequireOwnership = false)]
         public void OarStrokeServerRpc(bool leftSide, bool reverse, RpcParams rpcParams = default)
         {
+            if (Capsized.Value)
+                return;
             ulong sender = rpcParams.Receive.SenderClientId;
             RaftPost required = leftSide ? RaftPost.OarLeft : RaftPost.OarRight;
             if (Posts.OccupantOf(required) != sender)

@@ -47,7 +47,7 @@ namespace DriftTogether.EditorTools
         {
             PlayerSettings.companyName = "DriftTogether";
             PlayerSettings.productName = "Drift Together";
-            PlayerSettings.bundleVersion = "0.3.0";
+            PlayerSettings.bundleVersion = "0.4.0";
             PlayerSettings.colorSpace = ColorSpace.Linear;
             PlayerSettings.defaultScreenWidth = 1600;
             PlayerSettings.defaultScreenHeight = 900;
@@ -244,6 +244,14 @@ namespace DriftTogether.EditorTools
             avatar.AddComponent<DriftTogether.Coop.Net.AvatarFishing>();
             PrefabUtility.SaveAsPrefabAsset(avatar, netDir + "/PlayerAvatar.prefab");
             UnityEngine.Object.DestroyImmediate(avatar);
+
+            // Floating supply crate (spawned on capsize).
+            var crate = new GameObject("Crate");
+            crate.AddComponent<Unity.Netcode.NetworkObject>();
+            crate.AddComponent<Unity.Netcode.Components.NetworkTransform>();
+            crate.AddComponent<DriftTogether.Coop.Net.FloatingCrate>();
+            PrefabUtility.SaveAsPrefabAsset(crate, netDir + "/Crate.prefab");
+            UnityEngine.Object.DestroyImmediate(crate);
 
             Debug.Log("[Configurator] co-op network prefabs created");
         }

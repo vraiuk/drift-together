@@ -88,7 +88,7 @@ namespace DriftTogether.Coop.Net
 
         void RegisterNetPrefabs()
         {
-            foreach (string name in new[] { "Net/Raft", "Net/PlayerAvatar" })
+            foreach (string name in new[] { "Net/Raft", "Net/PlayerAvatar", "Net/Crate" })
             {
                 var prefab = Resources.Load<GameObject>(name);
                 if (prefab != null)

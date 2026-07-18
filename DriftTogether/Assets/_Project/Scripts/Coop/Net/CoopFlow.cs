@@ -46,5 +46,17 @@ namespace DriftTogether.Coop.Net
         {
             CoopBootstrap.Active?.ClientFinish(payload);
         }
+
+        [Rpc(SendTo.Everyone)]
+        public void CapsizedClientRpc()
+        {
+            CoopBootstrap.Active?.ClientCapsized();
+        }
+
+        [Rpc(SendTo.Everyone)]
+        public void RightedClientRpc()
+        {
+            CoopBootstrap.Active?.ClientRighted();
+        }
     }
 }

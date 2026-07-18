@@ -260,6 +260,29 @@ namespace DriftTogether.Coop
             Active?.HostSay(LineCategory.Fishing, 20f);
         }
 
+        internal static void HostSayCapsize()
+        {
+            Active?.HostSay(LineCategory.Capsize, 0f);
+        }
+
+        internal void ClientCapsized()
+        {
+            var am = AudioManager.Instance;
+            if (am != null)
+            {
+                am.PlaySfx(am.Collision, 0.9f, 0.7f);
+                am.PlaySfx(am.PaddleStroke, 1f, 0.6f);
+            }
+            _cameraRig?.Shake(1f);
+        }
+
+        internal void ClientRighted()
+        {
+            var am = AudioManager.Instance;
+            if (am != null)
+                am.PlaySfx(am.CampfireRest, 0.8f, 1.2f);
+        }
+
         internal static void HostCampfireRest()
         {
             if (Active == null || Raft == null || NetworkManager.Singleton == null ||
@@ -359,10 +382,23 @@ namespace DriftTogether.Coop
             }
             if (own.IsSwimming)
             {
-                Hud.SetHint(Vector3.Distance(own.transform.position, Raft.transform.position) <
-                            PlayerAvatar.BoardRange + 2.2f
-                    ? "E — залезть на плот"
-                    : "Плывите к плоту");
+                if (PlayerAvatar.NearestCrate(own.transform.position) != null)
+                    Hud.SetHint("E — выловить ящик с припасами!");
+                else if (Raft.Capsized.Value)
+                    Hud.SetHint(Vector3.Distance(own.transform.position, Raft.transform.position) <
+                                PlayerAvatar.BoardRange + 2.6f
+                        ? "Плот перевёрнут! Жмите E все вместе — перевернуть обратно"
+                        : "Плывите к перевёрнутому плоту");
+                else
+                    Hud.SetHint(Vector3.Distance(own.transform.position, Raft.transform.position) <
+                                PlayerAvatar.BoardRange + 2.2f
+                        ? "E — залезть на плот"
+                        : "Плывите к плоту");
+                return;
+            }
+            if (!Raft.Capsized.Value && Mathf.Abs(Raft.TiltSync.Value) > 0.62f)
+            {
+                Hud.SetHint("КРЕН! Разойдитесь по плоту!");
                 return;
             }
             var fishing = own.GetComponent<Net.AvatarFishing>();
