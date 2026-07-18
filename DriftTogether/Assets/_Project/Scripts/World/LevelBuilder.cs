@@ -83,13 +83,22 @@ namespace DriftTogether.World
                 new Vector3(6, 0, 452), JoinPoint
             });
 
-            LowerSpline = new RiverSpline(new[]
-            {
-                JoinPoint, new Vector3(3, 0, 512), new Vector3(6, 0, 535),
-                new Vector3(0, 0, 562), new Vector3(-8, 0, 600), new Vector3(6, 0, 640),
-                new Vector3(-5, 0, 680), new Vector3(2, 0, 715), new Vector3(0, 0, 750),
-                new Vector3(0, 0, 780)
-            });
+            LowerSpline = CoopMode
+                ? new RiverSpline(new[]
+                {
+                    JoinPoint, new Vector3(3, 0, 512), new Vector3(6, 0, 535),
+                    new Vector3(0, 0, 562), new Vector3(-8, 0, 600), new Vector3(6, 0, 640),
+                    new Vector3(-5, 0, 680), new Vector3(2, 0, 715), new Vector3(0, 0, 750),
+                    new Vector3(3, 0, 800), new Vector3(-2, 0, 845), new Vector3(0, 0, 880),
+                    new Vector3(0, 0, 910), new Vector3(0, 0, 945), new Vector3(0, 0, 970)
+                })
+                : new RiverSpline(new[]
+                {
+                    JoinPoint, new Vector3(3, 0, 512), new Vector3(6, 0, 535),
+                    new Vector3(0, 0, 562), new Vector3(-8, 0, 600), new Vector3(6, 0, 640),
+                    new Vector3(-5, 0, 680), new Vector3(2, 0, 715), new Vector3(0, 0, 750),
+                    new Vector3(0, 0, 780)
+                });
 
             Flow = new RiverFlow();
             Flow.AddBranch(new FlowBranch { Spline = UpperSpline, BaseCurrent = 1.1f, HalfWidth = UpperHalfWidth });
@@ -99,6 +108,8 @@ namespace DriftTogether.World
             Flow.AddBranch(noisy);
             var lower = new FlowBranch { Spline = LowerSpline, BaseCurrent = 1.2f, HalfWidth = LowerHalfWidth };
             lower.FastZones.Add((95f, 245f, 2.0f)); // final rapids
+            if (CoopMode)
+                lower.FastZones.Add((355f, 405f, 2.6f)); // разгон перед водопадом
             Flow.AddBranch(lower);
         }
 
@@ -505,6 +516,11 @@ namespace DriftTogether.World
 
         void BuildFinish()
         {
+            if (CoopMode)
+            {
+                BuildWaterfallAndMarina();
+                return;
+            }
             Vector3 pos = new Vector3(0f, 0f, 752f);
 
             foreach (float side in new[] { -1f, 1f })
@@ -550,6 +566,113 @@ namespace DriftTogether.World
             nbox.isTrigger = true;
             nbox.size = new Vector3(38f, 6f, 200f);
             NoisyZone = nz.AddComponent<NervousZone>();
+        }
+
+        /// <summary>UC-15: waterfall lip zone (co-op only).</summary>
+        public FinishZone WaterfallLip { get; private set; }
+
+        void BuildWaterfallAndMarina()
+        {
+            // Водопадный уступ: белая стена пены поперёк реки.
+            Vector3 lip = new Vector3(0f, 0f, 882f);
+            var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            wall.name = "WaterfallWall";
+            wall.transform.SetParent(_root, false);
+            wall.transform.position = new Vector3(0f, -0.6f, 888f);
+            wall.transform.localScale = new Vector3(LowerHalfWidth * 2f + 4f, 2.6f, 3f);
+            GameMaterials.ApplyTo(wall, "Foam");
+            Destroy(wall.GetComponent<Collider>());
+
+            for (int i = 0; i < 6; i++)
+            {
+                var mist = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                mist.name = "WaterfallMist";
+                mist.transform.SetParent(_root, false);
+                mist.transform.position = new Vector3(-6f + i * 2.4f, 0.6f, 889f);
+                mist.transform.localScale = new Vector3(3f, 1.6f, 2f);
+                GameMaterials.ApplyTo(mist, "Foam");
+                Destroy(mist.GetComponent<Collider>());
+            }
+
+            // Триггер кромки водопада.
+            var lipZone = new GameObject("WaterfallLip");
+            lipZone.transform.SetParent(_root, false);
+            lipZone.transform.position = new Vector3(0f, 1f, lip.z);
+            var lipBox = lipZone.AddComponent<BoxCollider>();
+            lipBox.isTrigger = true;
+            lipBox.size = new Vector3(LowerHalfWidth * 2f + 4f, 5f, 2.5f);
+            WaterfallLip = lipZone.AddComponent<FinishZone>();
+
+            // Пристань-цивилизация: домики, фонари, финальный причал.
+            Vector3 marina = new Vector3(0f, 0f, 942f);
+            for (int i = 0; i < 4; i++)
+            {
+                float side = i % 2 == 0 ? -1f : 1f;
+                var house = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                house.name = "House";
+                house.transform.SetParent(_root, false);
+                house.transform.position = new Vector3(side * (LowerHalfWidth + 4f + i), 1.4f,
+                    marina.z - 8f + i * 6f);
+                house.transform.localScale = new Vector3(3.2f, 2.8f, 3.2f);
+                GameMaterials.ApplyTo(house, "Wood");
+
+                var roofGo = new GameObject("Roof");
+                roofGo.transform.SetParent(house.transform, false);
+                roofGo.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+                roofGo.transform.localScale = new Vector3(0.55f, 0.5f, 0.55f);
+                var roofFilter = roofGo.AddComponent<MeshFilter>();
+                roofFilter.mesh = MeshFactory.BuildCone(1.1f, 1f, 4);
+                roofGo.AddComponent<MeshRenderer>().sharedMaterial = GameMaterials.Get("KayakHull");
+
+                var windowGo = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                windowGo.name = "Window";
+                windowGo.transform.SetParent(house.transform, false);
+                windowGo.transform.localPosition = new Vector3(0f, 0.05f, -0.51f);
+                windowGo.transform.localScale = new Vector3(0.3f, 0.3f, 0.02f);
+                GameMaterials.ApplyTo(windowGo, "FinishGlow");
+                Destroy(windowGo.GetComponent<Collider>());
+            }
+
+            foreach (float side in new[] { -1f, 1f })
+            {
+                var lamp = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                lamp.name = "MarinaLamp";
+                lamp.transform.SetParent(_root, false);
+                lamp.transform.position = new Vector3(side * (LowerHalfWidth + 0.8f), 1.6f, marina.z - 3f);
+                lamp.transform.localScale = new Vector3(0.12f, 1.6f, 0.12f);
+                GameMaterials.ApplyTo(lamp, "Wood");
+                var bulb = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                bulb.transform.SetParent(lamp.transform, false);
+                bulb.transform.localPosition = new Vector3(0f, 1.1f, 0f);
+                bulb.transform.localScale = new Vector3(2.4f, 0.18f, 2.4f);
+                GameMaterials.ApplyTo(bulb, "FinishGlow");
+                Destroy(bulb.GetComponent<Collider>());
+
+                var lightGo = new GameObject("MarinaLight");
+                lightGo.transform.SetParent(lamp.transform, false);
+                lightGo.transform.localPosition = new Vector3(0f, 1.2f, 0f);
+                var light = lightGo.AddComponent<Light>();
+                light.type = LightType.Point;
+                light.color = new Color(1f, 0.85f, 0.55f);
+                light.intensity = 2.2f;
+                light.range = 14f;
+            }
+
+            var zone = new GameObject("MarinaFinish");
+            zone.transform.SetParent(_root, false);
+            zone.transform.position = new Vector3(0f, 1f, marina.z);
+            var box = zone.AddComponent<BoxCollider>();
+            box.isTrigger = true;
+            box.size = new Vector3(LowerHalfWidth * 2f + 6f, 5f, 4f);
+            Finish = zone.AddComponent<FinishZone>();
+
+            // Нервная зона перед водопадом — Тим в ужасе.
+            var nz = new GameObject("WaterfallNerves");
+            nz.transform.SetParent(_root, false);
+            nz.transform.position = new Vector3(0f, 1f, 845f);
+            var nbox = nz.AddComponent<BoxCollider>();
+            nbox.isTrigger = true;
+            nbox.size = new Vector3(LowerHalfWidth * 2f + 6f, 6f, 70f);
         }
 
         void BuildTrees()

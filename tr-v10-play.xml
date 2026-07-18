@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Passed" total="4" passed="3" failed="0" inconclusive="0" skipped="1" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-07-18 12:56:57Z" end-time="2026-07-18 13:00:47Z" duration="229.8842762">
+  <test-suite type="TestSuite" id="1015" name="Drift Together" fullname="Drift Together" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-07-18 12:56:57Z" end-time="2026-07-18 13:00:47Z" duration="229.884276" total="4" passed="3" failed="0" inconclusive="0" skipped="1" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1009" name="DriftTogether.Tests.PlayMode.dll" fullname="/Users/vraiuk/WebstormProjects/drift-together/DriftTogether/Library/ScriptAssemblies/DriftTogether.Tests.PlayMode.dll" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-07-18 12:56:57Z" end-time="2026-07-18 13:00:47Z" duration="229.880750" total="4" passed="3" failed="0" inconclusive="0" skipped="1" asserts="0">
+      <properties>
+        <property name="_PID" value="11448" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1010" name="DriftTogether" fullname="DriftTogether" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-07-18 12:56:57Z" end-time="2026-07-18 13:00:47Z" duration="229.880548" total="4" passed="3" failed="0" inconclusive="0" skipped="1" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1011" name="Tests" fullname="DriftTogether.Tests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-07-18 12:56:57Z" end-time="2026-07-18 13:00:47Z" duration="229.880282" total="4" passed="3" failed="0" inconclusive="0" skipped="1" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1001" name="CoopNetworkTests" fullname="DriftTogether.Tests.CoopNetworkTests" classname="DriftTogether.Tests.CoopNetworkTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-07-18 12:56:57Z" end-time="2026-07-18 12:56:58Z" duration="0.732496" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1002" name="HostLocalSpawnsRaftAndAvatar" fullname="DriftTogether.Tests.CoopNetworkTests.HostLocalSpawnsRaftAndAvatar" methodname="HostLocalSpawnsRaftAndAvatar" classname="DriftTogether.Tests.CoopNetworkTests" runstate="Runnable" seed="551429020" result="Passed" start-time="2026-07-18 12:56:57Z" end-time="2026-07-18 12:56:58Z" duration="0.728113" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="120000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1003" name="CoopSmokeTests" fullname="DriftTogether.Tests.CoopSmokeTests" classname="DriftTogether.Tests.CoopSmokeTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-07-18 12:56:58Z" end-time="2026-07-18 13:00:15Z" duration="196.958942" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1004" name="CoopPlaythroughReachesReport" fullname="DriftTogether.Tests.CoopSmokeTests.CoopPlaythroughReachesReport" methodname="CoopPlaythroughReachesReport" classname="DriftTogether.Tests.CoopSmokeTests" runstate="Runnable" seed="1295378794" result="Passed" start-time="2026-07-18 12:56:58Z" end-time="2026-07-18 13:00:15Z" duration="196.940309" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="900000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+[SmokeCoop] pos=(0.00, 0.00, 4.00) wp=0/138 hull=5 vel=0.0
+[SmokeCoop] pos=(6.09, 0.19, 196.20) wp=34/138 hull=4 vel=5.6
+[SmokeCoop] pos=(20.63, 0.16, 379.73) wp=60/138 hull=0 vel=1.5
+[SmokeCoop] pos=(4.87, 0.12, 530.70) wp=79/138 hull=5 vel=0.0
+[SmokeCoop] pos=(4.86, 0.14, 530.62) wp=79/138 hull=5 vel=1.0
+[SmokeCoop] pos=(5.16, 0.12, 528.39) wp=79/138 hull=5 vel=3.7
+[SmokeCoop] pos=(9.92, 0.14, 526.61) wp=79/138 hull=5 vel=4.5
+[SmokeCoop] pos=(2.08, 0.13, 525.69) wp=79/138 hull=5 vel=2.1
+[SmokeCoop] pos=(5.38, 0.18, 530.70) wp=79/138 hull=5 vel=0.0
+[SmokeCoop] pos=(4.20, 0.13, 530.72) wp=80/138 hull=5 vel=0.0
+[SmokeCoop] pos=(4.40, 0.15, 530.70) wp=80/138 hull=5 vel=0.0
+[SmokeCoop] pos=(0.56, 0.15, 526.40) wp=80/138 hull=5 vel=0.6
+[SmokeCoop] pos=(0.41, 0.06, 741.63) wp=110/138 hull=3 vel=5.6
+[SmokeCoop] pos=(0.00, 0.09, 928.39) wp=137/138 hull=1 vel=5.6
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1005" name="RelayCheckTests" fullname="DriftTogether.Tests.RelayCheckTests" classname="DriftTogether.Tests.RelayCheckTests" runstate="Explicit" testcasecount="1" result="Skipped" label="Explicit" site="SetUp" start-time="2026-07-18 13:00:15Z" end-time="2026-07-18 13:00:15Z" duration="0.001012" total="1" passed="0" failed="0" inconclusive="0" skipped="1" asserts="0">
+            <properties>
+              <property name="_SKIPREASON" value="hits live Unity Gaming Services" />
+            </properties>
+            <reason>
+              <message><![CDATA[hits live Unity Gaming Services]]></message>
+            </reason>
+            <test-case id="1006" name="RelayAllocationAndJoinCodeWork" fullname="DriftTogether.Tests.RelayCheckTests.RelayAllocationAndJoinCodeWork" methodname="RelayAllocationAndJoinCodeWork" classname="DriftTogether.Tests.RelayCheckTests" runstate="Runnable" seed="314252120" result="Skipped" label="Explicit" site="Parent" start-time="0001-01-01 00:00:00Z" end-time="0001-01-01 00:00:00Z" duration="0.000000" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="120000" />
+              </properties>
+              <reason>
+                <message><![CDATA[hits live Unity Gaming Services]]></message>
+              </reason>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1007" name="SmokePlaythroughTests" fullname="DriftTogether.Tests.SmokePlaythroughTests" classname="DriftTogether.Tests.SmokePlaythroughTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-07-18 13:00:15Z" end-time="2026-07-18 13:00:47Z" duration="32.187149" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1008" name="FullPlaythroughReachesResultsAndReturnsToMenu" fullname="DriftTogether.Tests.SmokePlaythroughTests.FullPlaythroughReachesResultsAndReturnsToMenu" methodname="FullPlaythroughReachesResultsAndReturnsToMenu" classname="DriftTogether.Tests.SmokePlaythroughTests" runstate="Runnable" seed="570022695" result="Passed" start-time="2026-07-18 13:00:15Z" end-time="2026-07-18 13:00:47Z" duration="32.180688" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="900000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: /Users/vraiuk/Library/Application Support/DriftTogether/Drift Together/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

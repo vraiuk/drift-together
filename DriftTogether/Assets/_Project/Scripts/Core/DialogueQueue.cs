@@ -23,7 +23,8 @@ namespace DriftTogether.Core
         Camp,
         Boar,
         Portage,
-        Modules
+        Modules,
+        Waterfall
     }
 
     /// <summary>

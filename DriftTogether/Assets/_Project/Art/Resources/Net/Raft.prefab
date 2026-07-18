@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 8055821437447073101}
   - component: {fileID: 7648941212022944739}
   - component: {fileID: 8694313485244228116}
+  - component: {fileID: 115998673746182157}
   m_Layer: 0
   m_Name: Raft
   m_TagString: Untagged
@@ -98,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3953861595
+  GlobalObjectIdHash: 979122815
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -217,6 +218,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DriftTogether.Runtime::DriftTogether.Coop.Net.PortageController
   ShowTopMostFoldoutHeaderGroup: 1
+  RouteIndex: 0
+  PhaseSync:
+    m_InternalValue: 0
+  ProgressSync:
+    m_InternalValue: 0
+  TreeChops:
+    m_InternalValue: 0
+--- !u!114 &115998673746182157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7529338608870816832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7fa6fb5762634e2a8abf46686abfffd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DriftTogether.Runtime::DriftTogether.Coop.Net.PortageController
+  ShowTopMostFoldoutHeaderGroup: 1
+  RouteIndex: 1
   PhaseSync:
     m_InternalValue: 0
   ProgressSync:

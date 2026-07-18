@@ -166,6 +166,18 @@ namespace DriftTogether.Coop
             var raft = raftGo.GetComponent<RaftController>();
             raft.HostAttach(Flow, Stats);
 
+            // UC-14: восстановление запасов и модулей из автосейва.
+            if (StartFromCheckpoint && _restoredSave != null)
+            {
+                raft.Food.Value = _restoredSave.food;
+                raft.Logs.Value = _restoredSave.logs;
+                raft.ModulesMask.Value = _restoredSave.modulesMask;
+                while (raft.Integrity.Current > System.Math.Max(1, _restoredSave.hull))
+                    raft.Integrity.ApplyHit();
+                raft.Hull.Value = raft.Integrity.Current;
+                _restoredSave = null;
+            }
+
             int colorIndex = 0;
             foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
                 SpawnAvatarFor(clientId, colorIndex++);
@@ -183,8 +195,11 @@ namespace DriftTogether.Coop
                 {
                     SavedCheckpoint = z.RespawnPosition;
                     SavedCheckpointRotation = z.RespawnRotation;
+                    HostAutosave();
                 };
             _level.Finish.Finished += HostOnFinish;
+            if (_level.WaterfallLip != null)
+                _level.WaterfallLip.Finished += HostOnWaterfall;
 
             HostSay(LineCategory.Intro, 0f);
             HostSpawnShoreLife();
@@ -304,6 +319,77 @@ namespace DriftTogether.Coop
         internal static void HostSayModules()
         {
             Active?.HostSay(LineCategory.Modules, 12f);
+        }
+
+        static CoopSaveData _restoredSave;
+
+        /// <summary>UC-14: подхватить чекпоинт с диска, если в этой сессии его ещё нет.</summary>
+        public static bool TryRestoreFromDisk()
+        {
+            if (SavedCheckpoint.HasValue)
+                return true;
+            var data = CoopSave.TryLoad();
+            if (data == null)
+                return false;
+            SavedCheckpoint = data.Position;
+            SavedCheckpointRotation = data.Rotation;
+            _restoredSave = data;
+            return true;
+        }
+
+        void HostAutosave()
+        {
+            if (Raft == null || !SavedCheckpoint.HasValue)
+                return;
+            CoopSave.Write(new CoopSaveData
+            {
+                posX = SavedCheckpoint.Value.x,
+                posY = SavedCheckpoint.Value.y,
+                posZ = SavedCheckpoint.Value.z,
+                rotY = SavedCheckpointRotation.eulerAngles.y,
+                food = Raft.Food.Value,
+                logs = Raft.Logs.Value,
+                hull = Raft.Hull.Value,
+                modulesMask = Raft.ModulesMask.Value
+            });
+        }
+
+        void HostOnWaterfall()
+        {
+            if (Raft == null)
+                return;
+            Raft.HostWaterfallLanding();
+            foreach (var avatar in FindObjectsByType<PlayerAvatar>(FindObjectsSortMode.None))
+            {
+                avatar.WetTimer.Soak();
+                avatar.Wet.Value = true;
+            }
+            Raft.GetComponent<Net.CoopFlow>().WaterfallClientRpc();
+            HostSay(LineCategory.Waterfall, 0f);
+        }
+
+        internal void ClientWaterfall()
+        {
+            var am = AudioManager.Instance;
+            if (am != null)
+            {
+                am.PlaySfx(am.Collision, 1f, 0.55f);
+                am.PlaySfx(am.PaddleStroke, 1f, 0.5f);
+            }
+            _cameraRig?.Shake(1f);
+            StartCoroutine(WaterfallSlowmo());
+        }
+
+        System.Collections.IEnumerator WaterfallSlowmo()
+        {
+            Time.timeScale = 0.55f;
+            yield return new WaitForSecondsRealtime(2.4f);
+            for (float t = 0.55f; t < 1f; t += Time.unscaledDeltaTime * 0.7f)
+            {
+                Time.timeScale = t;
+                yield return null;
+            }
+            Time.timeScale = 1f;
         }
 
         void HostSpawnShoreLife()
@@ -467,6 +553,7 @@ namespace DriftTogether.Coop
             Raft.HostRepairFull();
             SavedCheckpoint = Active._level.CampfireRespawnPosition;
             SavedCheckpointRotation = Active._level.CampfireRespawnRotation;
+            Active.HostAutosave();
             Raft.GetComponent<CoopFlow>().CampfireRestClientRpc();
             Active.HostSay(LineCategory.Campfire, 0f);
         }
@@ -594,14 +681,15 @@ namespace DriftTogether.Coop
             }
             if (!own.IsAboard && !own.IsSwimming)
             {
-                var portage = Raft.GetComponent<Net.PortageController>();
-                if (portage != null)
+                foreach (var portage in Raft.GetComponents<Net.PortageController>())
                 {
                     if (portage.Phase == PortagePhase.NotStarted &&
                         portage.NearPost(own.transform.position) &&
                         portage.CanStart(Raft.transform.position))
                     {
-                        Hud.SetHint("E — начать волок (обход порогов по суше)");
+                        Hud.SetHint(portage.RouteIndex == 0
+                            ? "E — начать волок (обход порогов по суше)"
+                            : "E — тяжёлый волок вокруг водопада");
                         return;
                     }
                     if (portage.Phase == PortagePhase.Clearing)

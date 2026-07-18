@@ -822,6 +822,28 @@ namespace DriftTogether.Coop.Net
             }
         }
 
+        /// <summary>UC-15: последствия прыжка с водопада — прочность «в хлам», груз за борт.</summary>
+        public void HostWaterfallLanding()
+        {
+            if (!IsServer || Integrity == null)
+                return;
+            while (Integrity.Current > 1)
+                if (!ForceHullDown())
+                    break;
+            Hull.Value = Integrity.Current;
+            Food.Value = Mathf.CeilToInt(Food.Value * 0.5f);
+            Logs.Value = Mathf.CeilToInt(Logs.Value * 0.5f);
+        }
+
+        bool ForceHullDown()
+        {
+            // ApplyHit уважает неуязвимость — при посадке с водопада она не защищает.
+            var field = typeof(HullIntegrity).GetField("_lastDamageTime",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            field?.SetValue(Integrity, float.NegativeInfinity);
+            return Integrity.ApplyHit();
+        }
+
         public void HostRepairFull()
         {
             if (!IsServer || Integrity == null)

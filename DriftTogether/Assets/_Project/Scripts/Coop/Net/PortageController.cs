@@ -11,17 +11,41 @@ namespace DriftTogether.Coop.Net
     /// </summary>
     public sealed class PortageController : NetworkBehaviour
     {
-        public static readonly Vector3 StartPost = new Vector3(9.5f, 0f, 566f);
-        public static readonly Vector3[] LandPath =
+        // Route 0: обход финальных порогов. Route 1: тяжёлый волок вокруг водопада (UC-15).
+        static readonly Vector3[] StartPosts =
         {
-            new Vector3(10f, 0f, 570f), new Vector3(14f, 0f, 600f),
-            new Vector3(15.5f, 0f, 650f), new Vector3(12f, 0f, 695f),
-            new Vector3(4f, 0f, 712f)
+            new Vector3(9.5f, 0f, 566f), new Vector3(9f, 0f, 856f)
         };
-        public static readonly Vector3[] TreeSpots =
+        static readonly Vector3[] MooringPoints =
         {
-            new Vector3(14f, 0f, 604f), new Vector3(15f, 0f, 644f), new Vector3(13f, 0f, 688f)
+            new Vector3(4f, 0f, 566f), new Vector3(3f, 0f, 856f)
         };
+        static readonly Vector3[][] LandPaths =
+        {
+            new[]
+            {
+                new Vector3(10f, 0f, 570f), new Vector3(14f, 0f, 600f),
+                new Vector3(15.5f, 0f, 650f), new Vector3(12f, 0f, 695f),
+                new Vector3(4f, 0f, 712f)
+            },
+            new[]
+            {
+                new Vector3(10f, 0f, 860f), new Vector3(13f, 0f, 886f),
+                new Vector3(11f, 0f, 912f), new Vector3(4f, 0f, 928f)
+            }
+        };
+        static readonly Vector3[][] TreeSpotSets =
+        {
+            new[] { new Vector3(14f, 0f, 604f), new Vector3(15f, 0f, 644f), new Vector3(13f, 0f, 688f) },
+            new[] { new Vector3(12.5f, 0f, 882f), new Vector3(11.5f, 0f, 898f), new Vector3(12f, 0f, 868f) }
+        };
+
+        /// <summary>0 — пороги, 1 — водопад. Задаётся при создании префаба.</summary>
+        public int RouteIndex;
+
+        Vector3 StartPost => StartPosts[RouteIndex];
+        Vector3[] LandPath => LandPaths[RouteIndex];
+        Vector3[] TreeSpots => TreeSpotSets[RouteIndex];
         public const float InteractRange = 2.2f;
         public const float PullRange = 5f;
 
@@ -133,7 +157,7 @@ namespace DriftTogether.Coop.Net
 
         public bool CanStart(Vector3 raftPos) =>
             Phase == PortagePhase.NotStarted &&
-            Vector3.Distance(raftPos, new Vector3(4f, 0f, 566f)) < 12f;
+            Vector3.Distance(raftPos, MooringPoints[RouteIndex]) < 12f;
 
         // ---------- RPCs ----------
 
@@ -215,7 +239,7 @@ namespace DriftTogether.Coop.Net
 
         Vector3 EvaluatePath(float t)
         {
-            var path = LandPath;
+            Vector3[] path = LandPath;
             float total = 0f;
             for (int i = 1; i < path.Length; i++)
                 total += Vector3.Distance(path[i - 1], path[i]);
@@ -237,7 +261,9 @@ namespace DriftTogether.Coop.Net
         {
             _raft.PortageActive = false;
             var body = GetComponent<Rigidbody>();
-            Vector3 splash = new Vector3(4f, 0.12f, 712f);
+            Vector3 splash = RouteIndex == 0
+                ? new Vector3(4f, 0.12f, 712f)
+                : new Vector3(2f, 0.12f, 930f);
             body.position = splash;
             transform.position = splash;
             body.linearVelocity = Vector3.zero;

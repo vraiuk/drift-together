@@ -60,6 +60,12 @@ namespace DriftTogether.Coop.Net
         }
 
         [Rpc(SendTo.Everyone)]
+        public void WaterfallClientRpc()
+        {
+            CoopBootstrap.Active?.ClientWaterfall();
+        }
+
+        [Rpc(SendTo.Everyone)]
         public void RevealZoneClientRpc(int zoneIndex)
         {
             CoopBootstrap.Active?.RevealZoneBuoys(zoneIndex);

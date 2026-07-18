@@ -188,7 +188,7 @@ namespace DriftTogether.UI
                 _lobbyCode.text = string.IsNullOrEmpty(session.JoinCode)
                     ? "IP: " + LocalIp()
                     : session.JoinCode;
-                _checkpointButton.SetActive(CoopBootstrap.SavedCheckpoint.HasValue);
+                _checkpointButton.SetActive(CoopBootstrap.TryRestoreFromDisk());
             }
             else
             {
@@ -337,6 +337,7 @@ namespace DriftTogether.UI
             string[] lines =
             {
                 $"Время: {minutes:00}:{seconds:00}   ·   Маршрут: {stats.RouteDisplayName()}",
+                $"Состояние плота: {Coop.RaftCondition.Describe(stats.HullAtFinish, stats.ModulesBuilt)}",
                 $"Столкновений плота: {stats.RaftCollisions}   ·   Прочность на финише: {stats.HullAtFinish}/{Coop.Net.RaftController.MaxHull}",
                 $"Падений за борт: {overboardTotal}   ·   Переворотов: {stats.Capsizes}   ·   Плот уплывал: {stats.RaftLosses}" +
                     (stats.PortageUsed ? "   ·   Волок: да" : "") +

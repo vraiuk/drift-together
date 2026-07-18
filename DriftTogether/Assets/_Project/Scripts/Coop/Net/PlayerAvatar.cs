@@ -285,33 +285,35 @@ namespace DriftTogether.Coop.Net
             }
 
             // Волок (UC-11): столб — начать; дерево — рубить; у плота на суше — тянуть (удержание E).
-            var portage = Raft != null ? Raft.GetComponent<PortageController>() : null;
             PullingRope = false;
-            if (portage != null && !IsAboard && !IsSwimming)
+            if (Raft != null && !IsAboard && !IsSwimming)
             {
-                if (kb.eKey.wasPressedThisFrame)
+                foreach (var portage in Raft.GetComponents<PortageController>())
                 {
-                    if (portage.Phase == PortagePhase.NotStarted &&
-                        portage.NearPost(transform.position) &&
-                        portage.CanStart(Raft.transform.position))
+                    if (kb.eKey.wasPressedThisFrame)
                     {
-                        portage.BeginServerRpc();
-                        return;
+                        if (portage.Phase == PortagePhase.NotStarted &&
+                            portage.NearPost(transform.position) &&
+                            portage.CanStart(Raft.transform.position))
+                        {
+                            portage.BeginServerRpc();
+                            return;
+                        }
+                        int tree = portage.Phase == PortagePhase.Clearing
+                            ? portage.NearTree(transform.position)
+                            : -1;
+                        if (tree >= 0)
+                        {
+                            portage.ChopServerRpc(tree);
+                            return;
+                        }
                     }
-                    int tree = portage.Phase == PortagePhase.Clearing
-                        ? portage.NearTree(transform.position)
-                        : -1;
-                    if (tree >= 0)
+                    if (portage.Phase == PortagePhase.Hauling && kb.eKey.isPressed &&
+                        Vector3.Distance(transform.position, Raft.transform.position) <
+                        PortageController.PullRange)
                     {
-                        portage.ChopServerRpc(tree);
-                        return;
+                        PullingRope = true;
                     }
-                }
-                if (portage.Phase == PortagePhase.Hauling && kb.eKey.isPressed &&
-                    Vector3.Distance(transform.position, Raft.transform.position) <
-                    PortageController.PullRange)
-                {
-                    PullingRope = true;
                 }
             }
 
