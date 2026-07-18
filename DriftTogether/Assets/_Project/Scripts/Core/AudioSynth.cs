@@ -40,21 +40,23 @@ namespace DriftTogether.Core
         {
             float seconds = 16f;
             var buf = NewBuffer(seconds);
-            // A minor-ish pad: A2, C3, E3, G3 with slow detune and tremolo.
-            float[] freqs = { 110f, 130.81f, 164.81f, 196f };
-            float[] amps = { 0.5f, 0.35f, 0.4f, 0.22f };
+            // Два аккорда, плавно перетекающих по лупу: Am9 → Fmaj7.
+            float[] chordA = { 110f, 130.81f, 164.81f, 196f, 246.94f };
+            float[] chordB = { 87.31f, 130.81f, 174.61f, 220f, 261.63f };
+            float[] amps = { 0.5f, 0.35f, 0.4f, 0.22f, 0.14f };
             for (int i = 0; i < buf.Length; i++)
             {
                 float t = (float)i / SampleRate;
-                float phaseLoop = t / seconds * 2f * Mathf.PI; // for loop-safe LFOs
+                float phaseLoop = t / seconds * 2f * Mathf.PI; // loop-safe LFOs
+                float blend = 0.5f + 0.5f * Mathf.Sin(phaseLoop - Mathf.PI * 0.5f); // 0→1→0
                 float sample = 0f;
-                for (int v = 0; v < freqs.Length; v++)
+                for (int v = 0; v < amps.Length; v++)
                 {
                     float vib = 1f + 0.002f * Mathf.Sin(phaseLoop * (2 + v));
                     float trem = 0.75f + 0.25f * Mathf.Sin(phaseLoop * (1 + v) + v * 1.7f);
-                    sample += amps[v] * trem * Mathf.Sin(2f * Mathf.PI * freqs[v] * vib * t);
-                    // soft octave shimmer
-                    sample += amps[v] * 0.15f * trem * Mathf.Sin(2f * Mathf.PI * freqs[v] * 2f * t + v);
+                    sample += amps[v] * (1f - blend) * trem * Mathf.Sin(2f * Mathf.PI * chordA[v] * vib * t);
+                    sample += amps[v] * blend * trem * Mathf.Sin(2f * Mathf.PI * chordB[v] * vib * t);
+                    sample += amps[v] * 0.13f * trem * Mathf.Sin(2f * Mathf.PI * chordA[v] * 2f * t + v);
                 }
                 buf[i] = sample;
             }
@@ -240,6 +242,202 @@ namespace DriftTogether.Core
             }
             Normalize(buf, 0.35f);
             return MakeClip("UIClick", buf);
+        }
+
+        /// <summary>Ночной лес: редкие птичьи трели и сверчки, разреженный луп ~24 c.</summary>
+        public static AudioClip CreateForestLife()
+        {
+            float seconds = 24f;
+            var buf = NewBuffer(seconds);
+
+            // Сверчки: ритмичные высокие стрекотания в двух «гнёздах» лупа.
+            for (int burst = 0; burst < 26; burst++)
+            {
+                int start = _rng.Next(buf.Length - 6000);
+                float baseFreq = 3800f + (float)_rng.NextDouble() * 900f;
+                int chirps = 3 + _rng.Next(3);
+                for (int c = 0; c < chirps; c++)
+                {
+                    int cs = start + c * 2600;
+                    for (int i = 0; i < 1600 && cs + i < buf.Length; i++)
+                    {
+                        float t = (float)i / SampleRate;
+                        float env = Mathf.Sin(Mathf.Clamp01(i / 1600f) * Mathf.PI);
+                        buf[cs + i] += Mathf.Sin(2f * Mathf.PI * baseFreq * t) *
+                                       env * 0.045f * (0.6f + 0.4f * Mathf.Sin(t * 240f));
+                    }
+                }
+            }
+
+            // Птицы: редкие двух-трёхнотные свисты со скольжением.
+            for (int call = 0; call < 6; call++)
+            {
+                int start = _rng.Next(buf.Length - 30000);
+                int notes = 2 + _rng.Next(2);
+                for (int n = 0; n < notes; n++)
+                {
+                    int ns = start + n * 7000;
+                    float f0 = 1400f + (float)_rng.NextDouble() * 900f;
+                    float f1 = f0 * (0.85f + (float)_rng.NextDouble() * 0.4f);
+                    for (int i = 0; i < 5200 && ns + i < buf.Length; i++)
+                    {
+                        float t = (float)i / SampleRate;
+                        float k = i / 5200f;
+                        float env = Mathf.Sin(Mathf.Clamp01(k) * Mathf.PI);
+                        float freq = Mathf.Lerp(f0, f1, k);
+                        buf[ns + i] += Mathf.Sin(2f * Mathf.PI * freq * t) * env * 0.09f;
+                    }
+                }
+            }
+
+            FadeLoopSeam(buf);
+            Normalize(buf, 0.3f);
+            return MakeClip("ForestLife", buf);
+        }
+
+        /// <summary>Бурная вода порогов: яркий шум с клокотанием (луп 5 c).</summary>
+        public static AudioClip CreateRapidsLoop()
+        {
+            float seconds = 5f;
+            var buf = NewBuffer(seconds);
+            float lp = 0f;
+            float bubblePhase = 0f;
+            for (int i = 0; i < buf.Length; i++)
+            {
+                float t = (float)i / SampleRate;
+                float phaseLoop = t / seconds * 2f * Mathf.PI;
+                lp = Mathf.Lerp(lp, NextNoise(), 0.35f); // ярче обычной воды
+                float churn = 0.75f + 0.25f * Mathf.Sin(phaseLoop * 5f + Mathf.Sin(phaseLoop * 3f));
+                bubblePhase += 0.0004f + Mathf.Abs(NextNoise()) * 0.0002f;
+                float bubbles = Mathf.Sin(bubblePhase * 900f) * Mathf.Abs(NextNoise()) * 0.25f;
+                buf[i] = lp * churn + bubbles;
+            }
+            FadeLoopSeam(buf);
+            Normalize(buf, 0.45f);
+            return MakeClip("RapidsLoop", buf);
+        }
+
+        /// <summary>Рёв водопада: плотный низкий гул + шипение (луп 6 c, 3D-источник).</summary>
+        public static AudioClip CreateWaterfallRoar()
+        {
+            float seconds = 6f;
+            var buf = NewBuffer(seconds);
+            float brown = 0f, lp = 0f;
+            for (int i = 0; i < buf.Length; i++)
+            {
+                float t = (float)i / SampleRate;
+                float phaseLoop = t / seconds * 2f * Mathf.PI;
+                brown = Mathf.Clamp(brown + NextNoise() * 0.05f, -1f, 1f) * 0.995f;
+                lp = Mathf.Lerp(lp, NextNoise(), 0.6f);
+                float swell = 0.85f + 0.15f * Mathf.Sin(phaseLoop * 2f);
+                buf[i] = brown * 0.85f * swell + lp * 0.3f;
+            }
+            FadeLoopSeam(buf);
+            Normalize(buf, 0.85f);
+            return MakeClip("WaterfallRoar", buf);
+        }
+
+        /// <summary>Шаг по брёвнам плота: короткий деревянный стук.</summary>
+        public static AudioClip CreateFootstep()
+        {
+            float seconds = 0.14f;
+            var buf = NewBuffer(seconds);
+            for (int i = 0; i < buf.Length; i++)
+            {
+                float t = (float)i / SampleRate;
+                float knock = Mathf.Sin(2f * Mathf.PI * (150f - 60f * t) * t) * Mathf.Exp(-t * 40f);
+                float wood = Mathf.Sin(2f * Mathf.PI * 520f * t) * Mathf.Exp(-t * 70f) * 0.35f;
+                buf[i] = knock + wood + NextNoise() * Mathf.Exp(-t * 90f) * 0.1f;
+            }
+            Normalize(buf, 0.28f);
+            return MakeClip("Footstep", buf);
+        }
+
+        /// <summary>Падение в воду всем телом: большой всплеск.</summary>
+        public static AudioClip CreateBigSplash()
+        {
+            float seconds = 1.1f;
+            var buf = NewBuffer(seconds);
+            float lp = 0f;
+            for (int i = 0; i < buf.Length; i++)
+            {
+                float t = (float)i / SampleRate;
+                float plunge = Mathf.Sin(2f * Mathf.PI * (90f - 55f * t) * t) * Mathf.Exp(-t * 7f);
+                lp = Mathf.Lerp(lp, NextNoise(), 0.4f);
+                float spray = lp * Mathf.Exp(-t * 4.5f) * (t < 0.06f ? t / 0.06f : 1f);
+                float drips = t > 0.35f
+                    ? Mathf.Sin(2f * Mathf.PI * 900f * t) * Mathf.Abs(NextNoise()) * Mathf.Exp(-(t - 0.35f) * 6f) * 0.12f
+                    : 0f;
+                buf[i] = plunge * 0.8f + spray * 0.9f + drips;
+            }
+            Normalize(buf, 0.7f);
+            return MakeClip("BigSplash", buf);
+        }
+
+        /// <summary>Заброс удочки: свист лески и бульк поплавка.</summary>
+        public static AudioClip CreateCastPlop()
+        {
+            float seconds = 0.75f;
+            var buf = NewBuffer(seconds);
+            float lp = 0f;
+            for (int i = 0; i < buf.Length; i++)
+            {
+                float t = (float)i / SampleRate;
+                // свист (0–0.3 c)
+                lp = Mathf.Lerp(lp, NextNoise(), 0.55f);
+                float whip = t < 0.3f ? lp * Mathf.Sin(t / 0.3f * Mathf.PI) * 0.35f : 0f;
+                // бульк (0.42 c)
+                float plop = 0f;
+                if (t > 0.42f)
+                {
+                    float pt = t - 0.42f;
+                    plop = Mathf.Sin(2f * Mathf.PI * (320f + 480f * pt) * pt) * Mathf.Exp(-pt * 22f) * 0.8f;
+                }
+                buf[i] = whip + plop;
+            }
+            Normalize(buf, 0.45f);
+            return MakeClip("CastPlop", buf);
+        }
+
+        /// <summary>Поклёвка: короткий двойной бульк.</summary>
+        public static AudioClip CreateBiteBlup()
+        {
+            float seconds = 0.4f;
+            var buf = NewBuffer(seconds);
+            for (int i = 0; i < buf.Length; i++)
+            {
+                float t = (float)i / SampleRate;
+                float b1 = Mathf.Sin(2f * Mathf.PI * (260f + 300f * t) * t) * Mathf.Exp(-t * 26f);
+                float b2 = t > 0.16f
+                    ? Mathf.Sin(2f * Mathf.PI * (300f + 380f * (t - 0.16f)) * (t - 0.16f)) *
+                      Mathf.Exp(-(t - 0.16f) * 26f)
+                    : 0f;
+                buf[i] = b1 * 0.8f + b2;
+            }
+            Normalize(buf, 0.5f);
+            return MakeClip("BiteBlup", buf);
+        }
+
+        /// <summary>Якорная цепь: серия металлических щелчков с затуханием.</summary>
+        public static AudioClip CreateChainRattle()
+        {
+            float seconds = 0.9f;
+            var buf = NewBuffer(seconds);
+            for (int link = 0; link < 9; link++)
+            {
+                int start = (int)(link * 0.09f * SampleRate) + _rng.Next(900);
+                float amp = 1f - link * 0.08f;
+                float freq = 1900f + (float)_rng.NextDouble() * 700f;
+                for (int i = 0; i < 1800 && start + i < buf.Length; i++)
+                {
+                    float t = (float)i / SampleRate;
+                    buf[start + i] += (Mathf.Sin(2f * Mathf.PI * freq * t) * 0.6f +
+                                       Mathf.Sin(2f * Mathf.PI * freq * 1.51f * t) * 0.3f) *
+                                      Mathf.Exp(-t * 55f) * amp;
+                }
+            }
+            Normalize(buf, 0.4f);
+            return MakeClip("ChainRattle", buf);
         }
 
         /// <summary>Fades the loop edges to zero so looping clips do not click at the seam.</summary>

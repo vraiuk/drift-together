@@ -780,7 +780,7 @@ namespace DriftTogether.Coop.Net
                 Anchor.Drop(current, CoopBootstrap.InMooringZone(transform.position));
             }
             AnchorSync.Value = (int)Anchor.State;
-            GetComponent<CoopFlow>().RaftBumpClientRpc();
+            GetComponent<CoopFlow>().ChainClientRpc();
         }
 
         [Rpc(SendTo.Server, RequireOwnership = false)]

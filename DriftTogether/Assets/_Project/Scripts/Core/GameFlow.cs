@@ -213,6 +213,12 @@ namespace DriftTogether.Core
             Stats.ElapsedSeconds += Time.deltaTime;
             UpdateCampfire();
             UpdateChatter();
+
+            if (Level != null && Level.Flow != null && AudioManager.Instance != null)
+            {
+                float current = Level.Flow.CurrentAt(Kayak.transform.position).magnitude;
+                AudioManager.Instance.SetRapidsMix((current - 1.3f) / 1.6f);
+            }
         }
 
         void UpdateCampfire()

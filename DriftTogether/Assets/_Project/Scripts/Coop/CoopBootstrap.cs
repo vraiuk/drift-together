@@ -74,6 +74,17 @@ namespace DriftTogether.Coop
             BuildScoutZones();
             BuildTouristCampDecor();
 
+            // Рёв водопада — пространственный источник у кромки (UC-15).
+            var roarGo = new GameObject("WaterfallRoar");
+            roarGo.transform.position = new Vector3(0f, 1f, 886f);
+            var roar = roarGo.AddComponent<AudioSource>();
+            roar.clip = AudioManager.Instance.WaterfallRoar;
+            roar.loop = true;
+            roar.spatialBlend = 1f;
+            roar.minDistance = 10f;
+            roar.maxDistance = 120f;
+            roar.Play();
+
             var session = SessionManager.Ensure();
             session.ConnectionFailed += OnConnectionFailed;
 
@@ -373,8 +384,8 @@ namespace DriftTogether.Coop
             var am = AudioManager.Instance;
             if (am != null)
             {
-                am.PlaySfx(am.Collision, 1f, 0.55f);
-                am.PlaySfx(am.PaddleStroke, 1f, 0.5f);
+                am.PlaySfx(am.BigSplash, 1f, 0.7f);
+                am.PlaySfx(am.Collision, 0.8f, 0.55f);
             }
             _cameraRig?.Shake(1f);
             StartCoroutine(WaterfallSlowmo());
@@ -614,6 +625,13 @@ namespace DriftTogether.Coop
             var kb = UnityEngine.InputSystem.Keyboard.current;
             if (kb != null && kb.escapeKey.wasPressedThisFrame)
                 TogglePause();
+
+            // Микс бурной воды по силе течения вокруг плота.
+            if (Flow != null && Raft != null && AudioManager.Instance != null)
+            {
+                float current = Flow.CurrentAt(Raft.transform.position).magnitude;
+                AudioManager.Instance.SetRapidsMix((current - 1.3f) / 1.6f);
+            }
 
             if (nm.IsHost && !_finished && Stats != null)
             {
@@ -859,7 +877,7 @@ namespace DriftTogether.Coop
         {
             var am = AudioManager.Instance;
             if (am != null)
-                am.PlaySfx(am.PaddleStroke, 0.9f, 0.7f);
+                am.PlaySfx(am.BigSplash, 0.85f, Random.Range(0.9f, 1.1f));
         }
 
         internal void ClientCampfireRest()

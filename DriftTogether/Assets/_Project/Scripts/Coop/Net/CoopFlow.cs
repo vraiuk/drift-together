@@ -60,6 +60,14 @@ namespace DriftTogether.Coop.Net
         }
 
         [Rpc(SendTo.Everyone)]
+        public void ChainClientRpc()
+        {
+            var am = Core.AudioManager.Instance;
+            if (am != null)
+                am.PlaySfx(am.ChainRattle, 0.7f);
+        }
+
+        [Rpc(SendTo.Everyone)]
         public void WaterfallClientRpc()
         {
             CoopBootstrap.Active?.ClientWaterfall();

@@ -147,6 +147,10 @@ namespace DriftTogether.Coop.Net
                     pos += dir * (WalkSpeed * WetSpeedMultiplier() * dt) + _pushVelocity * dt;
                     TryGetGroundAt(pos, out groundY, out _);
                     pos.y = Mathf.Lerp(pos.y, groundY, dt * 12f);
+
+                    var amSteps = AudioManager.Instance;
+                    if (amSteps != null)
+                        amSteps.TickFootsteps(dir.magnitude, dt);
                 }
                 else
                 {

@@ -269,6 +269,9 @@ namespace DriftTogether.Coop.Net
                 if (show)
                     _bobber.position = pos;
             }
+            var amCast = AudioManager.Instance;
+            if (show && amCast != null)
+                amCast.PlaySfx(amCast.CastPlop, 0.6f);
             UpdateRodVisual(show || HasRod.Value);
         }
 
@@ -279,7 +282,7 @@ namespace DriftTogether.Coop.Net
                 _bobber.position += Vector3.down * 0.12f;
             var am = AudioManager.Instance;
             if (am != null)
-                am.PlaySfx(am.SoftBump, 0.7f, 1.6f);
+                am.PlaySfx(am.BiteBlup, 0.85f);
         }
 
         [Rpc(SendTo.Everyone)]
