@@ -53,6 +53,9 @@ namespace DriftTogether.Coop
             AudioManager.Instance.SetWaterPresence(1f);
             GameSettings.ApplyToListener();
 
+            // Shore colliders (layer 8) are for avatar feet only, not the raft.
+            Physics.IgnoreLayerCollision(0, 8, true);
+
             // Deterministic decorations on every peer.
             Random.InitState(12321);
             _level = gameObject.AddComponent<LevelBuilder>();
@@ -69,6 +72,7 @@ namespace DriftTogether.Coop
 
             _dialogue = new DialogueQueue(new GameClock());
             BuildScoutZones();
+            BuildTouristCampDecor();
 
             var session = SessionManager.Ensure();
             session.ConnectionFailed += OnConnectionFailed;
@@ -183,6 +187,7 @@ namespace DriftTogether.Coop
             _level.Finish.Finished += HostOnFinish;
 
             HostSay(LineCategory.Intro, 0f);
+            HostSpawnShoreLife();
 
             if (SmokeAutopilot.CoopCommandLineRequested() || CoopSmokePilot.RequestedByTest)
             {
@@ -281,6 +286,58 @@ namespace DriftTogether.Coop
             Active?.HostSay(LineCategory.RaftSnagged, 0f);
         }
 
+        internal static void HostSayCamp()
+        {
+            Active?.HostSay(LineCategory.Camp, 0f);
+        }
+
+        internal static void HostSayBoar()
+        {
+            Active?.HostSay(LineCategory.Boar, 18f);
+        }
+
+        void HostSpawnShoreLife()
+        {
+            var session = SessionManager.Instance;
+            var nodePrefab = session.LoadNetPrefab("Gather");
+            if (nodePrefab != null)
+            {
+                (Net.GatherKind kind, Vector3 pos)[] spots =
+                {
+                    (Net.GatherKind.Berries, new Vector3(-10.5f, 0f, 62f)),
+                    (Net.GatherKind.Logs, new Vector3(11f, 0f, 104f)),
+                    (Net.GatherKind.Berries, new Vector3(-11f, 0f, 148f)),
+                    (Net.GatherKind.Logs, new Vector3(10.5f, 0f, 214f)),
+                    (Net.GatherKind.Berries, new Vector3(-38f, 0f, 372f)),
+                    (Net.GatherKind.Logs, new Vector3(9.5f, 0f, 500f)),
+                    (Net.GatherKind.Berries, new Vector3(13f, 0f, 545f)),
+                    (Net.GatherKind.Logs, new Vector3(-11f, 0f, 620f)),
+                    (Net.GatherKind.TouristChest, new Vector3(-14.5f, 0f, 458f))
+                };
+                foreach (var (kind, pos) in spots)
+                {
+                    Vector3 p2 = pos;
+                    if (Physics.Raycast(p2 + Vector3.up * 6f, Vector3.down, out RaycastHit hit,
+                            12f, ~0, QueryTriggerInteraction.Ignore))
+                        p2.y = hit.point.y;
+                    var go = Instantiate(nodePrefab, p2, Quaternion.identity);
+                    go.GetComponent<Net.GatherNode>().Kind.Value = (int)kind;
+                    go.GetComponent<NetworkObject>().Spawn(true);
+                }
+            }
+
+            var boarPrefab = session.LoadNetPrefab("Boar");
+            if (boarPrefab != null)
+            {
+                Vector3 home = new Vector3(-17f, 1.2f, 452f);
+                var boar = Instantiate(boarPrefab, home, Quaternion.identity);
+                boar.GetComponent<Net.BoarController>().HomePoint = home;
+                boar.GetComponent<NetworkObject>().Spawn(true);
+            }
+
+            // Палатка лагеря туристов (декорация, у всех строится детерминированно на хосте-споне не нужна — ставим локально у каждого).
+        }
+
         // ---------- Mooring & scouting (UC-06) ----------
 
         static readonly Vector3[] MooringSpots =
@@ -321,6 +378,23 @@ namespace DriftTogether.Coop
                 EndZ = 705f,
                 SafeLine = SampleLine(_level.LowerSpline, 95f, 235f, 13f)
             });
+        }
+
+        void BuildTouristCampDecor()
+        {
+            // Палатка и кострище — чисто декорация, строится у всех одинаково.
+            var tent = new GameObject("TouristTent");
+            tent.transform.position = new Vector3(-16.5f, 1.1f, 460f);
+            var canvasFilter = tent.AddComponent<MeshFilter>();
+            canvasFilter.mesh = MeshFactory.BuildCone(1.3f, 1.6f, 4);
+            tent.AddComponent<MeshRenderer>().sharedMaterial = GameMaterials.Get("KayakHull");
+
+            var firepit = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            firepit.name = "CampFirepit";
+            Destroy(firepit.GetComponent<Collider>());
+            firepit.transform.position = new Vector3(-14f, 1.05f, 461.5f);
+            firepit.transform.localScale = new Vector3(0.8f, 0.08f, 0.8f);
+            GameMaterials.ApplyTo(firepit, "Rock");
         }
 
         Vector3[] SampleLine(RiverSpline spline, float from, float to, float step)
@@ -433,7 +507,7 @@ namespace DriftTogether.Coop
                 int crew = 0;
                 foreach (var _ in FindObjectsByType<PlayerAvatar>(FindObjectsSortMode.None))
                     crew++;
-                Hud.ShowCrewCounter(Mathf.Max(crew, 1), Raft.Food.Value);
+                Hud.ShowCrewCounter(Mathf.Max(crew, 1), Raft.Food.Value, Raft.Logs.Value);
 
                 var own = OwnAvatar();
                 Hud.SetWet(own != null && own.Wet.Value);
@@ -506,6 +580,12 @@ namespace DriftTogether.Coop
             if (!Raft.Capsized.Value && Mathf.Abs(Raft.TiltSync.Value) > 0.62f)
             {
                 Hud.SetHint("КРЕН! Разойдитесь по плоту!");
+                return;
+            }
+            if (!own.IsAboard && !own.IsSwimming &&
+                Net.GatherNode.Nearest(own.transform.position) != null)
+            {
+                Hud.SetHint("E — собрать припасы");
                 return;
             }
             var fishing = own.GetComponent<Net.AvatarFishing>();

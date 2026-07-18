@@ -19,7 +19,9 @@ namespace DriftTogether.Core
         Anchor,
         Scout,
         RaftLost,
-        RaftSnagged
+        RaftSnagged,
+        Camp,
+        Boar
     }
 
     /// <summary>

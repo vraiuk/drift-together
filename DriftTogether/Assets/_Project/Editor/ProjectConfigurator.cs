@@ -47,7 +47,7 @@ namespace DriftTogether.EditorTools
         {
             PlayerSettings.companyName = "DriftTogether";
             PlayerSettings.productName = "Drift Together";
-            PlayerSettings.bundleVersion = "0.6.0";
+            PlayerSettings.bundleVersion = "0.7.0";
             PlayerSettings.colorSpace = ColorSpace.Linear;
             PlayerSettings.defaultScreenWidth = 1600;
             PlayerSettings.defaultScreenHeight = 900;
@@ -252,6 +252,21 @@ namespace DriftTogether.EditorTools
             crate.AddComponent<DriftTogether.Coop.Net.FloatingCrate>();
             PrefabUtility.SaveAsPrefabAsset(crate, netDir + "/Crate.prefab");
             UnityEngine.Object.DestroyImmediate(crate);
+
+            // Shore gathering node (UC-10).
+            var gather = new GameObject("Gather");
+            gather.AddComponent<Unity.Netcode.NetworkObject>();
+            gather.AddComponent<DriftTogether.Coop.Net.GatherNode>();
+            PrefabUtility.SaveAsPrefabAsset(gather, netDir + "/Gather.prefab");
+            UnityEngine.Object.DestroyImmediate(gather);
+
+            // Boar (UC-10).
+            var boar = new GameObject("Boar");
+            boar.AddComponent<Unity.Netcode.NetworkObject>();
+            boar.AddComponent<Unity.Netcode.Components.NetworkTransform>();
+            boar.AddComponent<DriftTogether.Coop.Net.BoarController>();
+            PrefabUtility.SaveAsPrefabAsset(boar, netDir + "/Boar.prefab");
+            UnityEngine.Object.DestroyImmediate(boar);
 
             Debug.Log("[Configurator] co-op network prefabs created");
         }

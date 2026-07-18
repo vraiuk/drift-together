@@ -116,10 +116,12 @@ namespace DriftTogether.UI
         }
 
         /// <summary>Co-op has no mushrooms — the counter shows crew and food instead.</summary>
-        public void ShowCrewCounter(int players, int food = -1)
+        public void ShowCrewCounter(int players, int food = -1, int logs = -1)
         {
             _mushroomText.text = food >= 0
-                ? $"Команда {players} · Еда {food}"
+                ? (logs >= 0
+                    ? $"Команда {players} · Еда {food} · Брёвна {logs}"
+                    : $"Команда {players} · Еда {food}")
                 : $"Команда: {players}";
         }
 

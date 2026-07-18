@@ -146,6 +146,16 @@ namespace DriftTogether.World
                 var renderer = bank.AddComponent<MeshRenderer>();
                 filter.mesh = MeshFactory.BuildBankStrip(spline.Samples, halfWidth + 0.7f, 9f, 2.2f, right);
                 renderer.sharedMaterial = GameMaterials.Get("Bank");
+                if (CoopMode)
+                {
+                    // Walkable shores for UC-10 outings. Layer 8 is ignored by
+                    // the raft's physics (см. CoopBootstrap) — банки нужны только
+                    // ногам аватаров (raycast), а плот держат невидимые стены.
+                    var meshCollider = bank.AddComponent<MeshCollider>();
+                    meshCollider.sharedMesh = filter.mesh;
+                    bank.layer = 8;
+                    bank.AddComponent<SoftSurface>();
+                }
             }
 
             // Invisible soft wall colliders that keep the kayak inside the river.

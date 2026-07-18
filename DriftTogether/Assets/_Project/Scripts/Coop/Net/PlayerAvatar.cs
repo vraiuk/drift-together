@@ -282,6 +282,17 @@ namespace DriftTogether.Coop.Net
                 }
             }
 
+            // E на берегу — собрать ближайший ресурс (UC-10).
+            if (kb.eKey.wasPressedThisFrame && !IsAboard && !IsSwimming)
+            {
+                var node = GatherNode.Nearest(transform.position);
+                if (node != null)
+                {
+                    node.GatherServerRpc();
+                    return;
+                }
+            }
+
             // E — рыбалка имеет приоритет, затем пост / костёр / ремонт.
             if (kb.eKey.wasPressedThisFrame && IsAboard && Raft != null)
             {
@@ -330,6 +341,15 @@ namespace DriftTogether.Coop.Net
                 }
             }
             return best;
+        }
+
+        /// <summary>Host-side push (boar, scripted events).</summary>
+        public void ServerPush(Vector3 impulse)
+        {
+            if (!IsServer)
+                return;
+            PushedClientRpc(impulse.normalized * Mathf.Max(impulse.magnitude, 1f),
+                RpcTarget.Single(OwnerClientId, RpcTargetUse.Temp));
         }
 
         /// <summary>Host order: this avatar was thrown into the water (capsize).</summary>

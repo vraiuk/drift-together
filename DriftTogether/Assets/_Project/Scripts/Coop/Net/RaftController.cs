@@ -25,6 +25,8 @@ namespace DriftTogether.Coop.Net
         public NetworkVariable<float> RudderAngle = new NetworkVariable<float>(0f);
         /// <summary>Shared food store (fish and foraged supplies).</summary>
         public NetworkVariable<int> Food = new NetworkVariable<int>(0);
+        /// <summary>Shared timber store (shore logging, UC-10/13).</summary>
+        public NetworkVariable<int> Logs = new NetworkVariable<int>(0);
         public NetworkVariable<bool> Capsized = new NetworkVariable<bool>(false);
         public NetworkVariable<float> TiltSync = new NetworkVariable<float>(0f);
 

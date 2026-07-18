@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6197031815003872960
+--- !u!1 &445866588264098555
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,24 +8,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3860955581452651476}
-  - component: {fileID: 8278922438100437786}
-  - component: {fileID: 1625338728511350616}
-  - component: {fileID: 542979761640481479}
+  - component: {fileID: 5615542858969175601}
+  - component: {fileID: 6317089225936638610}
+  - component: {fileID: 4676313794298096621}
+  - component: {fileID: 7878160288870040162}
   m_Layer: 0
-  m_Name: Crate
+  m_Name: Boar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3860955581452651476
+--- !u!4 &5615542858969175601
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6197031815003872960}
+  m_GameObject: {fileID: 445866588264098555}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -34,13 +34,13 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8278922438100437786
+--- !u!114 &6317089225936638610
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6197031815003872960}
+  m_GameObject: {fileID: 445866588264098555}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
@@ -59,13 +59,13 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &1625338728511350616
+--- !u!114 &4676313794298096621
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6197031815003872960}
+  m_GameObject: {fileID: 445866588264098555}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
@@ -105,17 +105,17 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &542979761640481479
+--- !u!114 &7878160288870040162
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6197031815003872960}
+  m_GameObject: {fileID: 445866588264098555}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdb9663dc2ee34b4596ad1cebea8784a, type: 3}
+  m_Script: {fileID: 11500000, guid: 168c8a72e6c004417ada06c4869a0669, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: DriftTogether.Runtime::DriftTogether.Coop.Net.FloatingCrate
+  m_EditorClassIdentifier: DriftTogether.Runtime::DriftTogether.Coop.Net.BoarController
   ShowTopMostFoldoutHeaderGroup: 1
-  FoodValue: 1
+  HomePoint: {x: 0, y: 0, z: 0}

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Failed(Child)" total="4" passed="1" failed="2" inconclusive="0" skipped="1" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-07-18 11:02:13Z" end-time="2026-07-18 11:02:47Z" duration="33.7404638">
+  <test-suite type="TestSuite" id="1015" name="Drift Together" fullname="Drift Together" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-07-18 11:02:13Z" end-time="2026-07-18 11:02:47Z" duration="33.740464" total="4" passed="1" failed="2" inconclusive="0" skipped="1" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1009" name="DriftTogether.Tests.PlayMode.dll" fullname="/Users/vraiuk/WebstormProjects/drift-together/DriftTogether/Library/ScriptAssemblies/DriftTogether.Tests.PlayMode.dll" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-07-18 11:02:13Z" end-time="2026-07-18 11:02:47Z" duration="33.737093" total="4" passed="1" failed="2" inconclusive="0" skipped="1" asserts="0">
+      <properties>
+        <property name="_PID" value="4173" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1010" name="DriftTogether" fullname="DriftTogether" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-07-18 11:02:13Z" end-time="2026-07-18 11:02:47Z" duration="33.736820" total="4" passed="1" failed="2" inconclusive="0" skipped="1" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1011" name="Tests" fullname="DriftTogether.Tests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-07-18 11:02:13Z" end-time="2026-07-18 11:02:47Z" duration="33.736586" total="4" passed="1" failed="2" inconclusive="0" skipped="1" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1001" name="CoopNetworkTests" fullname="DriftTogether.Tests.CoopNetworkTests" classname="DriftTogether.Tests.CoopNetworkTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-07-18 11:02:13Z" end-time="2026-07-18 11:02:14Z" duration="0.505712" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1002" name="HostLocalSpawnsRaftAndAvatar" fullname="DriftTogether.Tests.CoopNetworkTests.HostLocalSpawnsRaftAndAvatar" methodname="HostLocalSpawnsRaftAndAvatar" classname="DriftTogether.Tests.CoopNetworkTests" runstate="Runnable" seed="862509330" result="Failed" start-time="2026-07-18 11:02:13Z" end-time="2026-07-18 11:02:14Z" duration="0.501581" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="120000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[Unhandled log message: '[Exception] NullReferenceException: Object reference not set to an instance of an object.'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[DriftTogether.Coop.CoopBootstrap.HostSpawnShoreLife () (at Assets/_Project/Scripts/Coop/CoopBootstrap.cs:331)
+DriftTogether.Coop.CoopBootstrap.HostBegin () (at Assets/_Project/Scripts/Coop/CoopBootstrap.cs:187)
+DriftTogether.Coop.CoopBootstrap.Start () (at Assets/_Project/Scripts/Coop/CoopBootstrap.cs:79)
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+The referenced script on this Behaviour (Game Object '<null>') is missing!
+The referenced script on this Behaviour (Game Object 'Boar') is missing!
+The referenced script on this Behaviour (Game Object 'Boar') is missing!
+NullReferenceException: Object reference not set to an instance of an object.
+DriftTogether.Coop.CoopBootstrap.HostSpawnShoreLife () (at Assets/_Project/Scripts/Coop/CoopBootstrap.cs:331)
+DriftTogether.Coop.CoopBootstrap.HostBegin () (at Assets/_Project/Scripts/Coop/CoopBootstrap.cs:187)
+DriftTogether.Coop.CoopBootstrap.Start () (at Assets/_Project/Scripts/Coop/CoopBootstrap.cs:79)
+
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1003" name="CoopSmokeTests" fullname="DriftTogether.Tests.CoopSmokeTests" classname="DriftTogether.Tests.CoopSmokeTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-07-18 11:02:14Z" end-time="2026-07-18 11:02:14Z" duration="0.283709" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1004" name="CoopPlaythroughReachesReport" fullname="DriftTogether.Tests.CoopSmokeTests.CoopPlaythroughReachesReport" methodname="CoopPlaythroughReachesReport" classname="DriftTogether.Tests.CoopSmokeTests" runstate="Runnable" seed="458047715" result="Failed" start-time="2026-07-18 11:02:14Z" end-time="2026-07-18 11:02:14Z" duration="0.124979" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="900000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[Unhandled log message: '[Exception] NullReferenceException: Object reference not set to an instance of an object.'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[DriftTogether.Coop.CoopBootstrap.HostSpawnShoreLife () (at Assets/_Project/Scripts/Coop/CoopBootstrap.cs:331)
+DriftTogether.Coop.CoopBootstrap.HostBegin () (at Assets/_Project/Scripts/Coop/CoopBootstrap.cs:187)
+DriftTogether.Coop.CoopBootstrap.Start () (at Assets/_Project/Scripts/Coop/CoopBootstrap.cs:79)
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+The referenced script on this Behaviour (Game Object '<null>') is missing!
+The referenced script on this Behaviour (Game Object 'Boar') is missing!
+The referenced script on this Behaviour (Game Object 'Boar') is missing!
+NullReferenceException: Object reference not set to an instance of an object.
+DriftTogether.Coop.CoopBootstrap.HostSpawnShoreLife () (at Assets/_Project/Scripts/Coop/CoopBootstrap.cs:331)
+DriftTogether.Coop.CoopBootstrap.HostBegin () (at Assets/_Project/Scripts/Coop/CoopBootstrap.cs:187)
+DriftTogether.Coop.CoopBootstrap.Start () (at Assets/_Project/Scripts/Coop/CoopBootstrap.cs:79)
+
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1005" name="RelayCheckTests" fullname="DriftTogether.Tests.RelayCheckTests" classname="DriftTogether.Tests.RelayCheckTests" runstate="Explicit" testcasecount="1" result="Skipped" label="Explicit" site="SetUp" start-time="2026-07-18 11:02:14Z" end-time="2026-07-18 11:02:14Z" duration="0.000623" total="1" passed="0" failed="0" inconclusive="0" skipped="1" asserts="0">
+            <properties>
+              <property name="_SKIPREASON" value="hits live Unity Gaming Services" />
+            </properties>
+            <reason>
+              <message><![CDATA[hits live Unity Gaming Services]]></message>
+            </reason>
+            <test-case id="1006" name="RelayAllocationAndJoinCodeWork" fullname="DriftTogether.Tests.RelayCheckTests.RelayAllocationAndJoinCodeWork" methodname="RelayAllocationAndJoinCodeWork" classname="DriftTogether.Tests.RelayCheckTests" runstate="Runnable" seed="254013482" result="Skipped" label="Explicit" site="Parent" start-time="0001-01-01 00:00:00Z" end-time="0001-01-01 00:00:00Z" duration="0.000000" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="120000" />
+              </properties>
+              <reason>
+                <message><![CDATA[hits live Unity Gaming Services]]></message>
+              </reason>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1007" name="SmokePlaythroughTests" fullname="DriftTogether.Tests.SmokePlaythroughTests" classname="DriftTogether.Tests.SmokePlaythroughTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-07-18 11:02:14Z" end-time="2026-07-18 11:02:47Z" duration="32.945908" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1008" name="FullPlaythroughReachesResultsAndReturnsToMenu" fullname="DriftTogether.Tests.SmokePlaythroughTests.FullPlaythroughReachesResultsAndReturnsToMenu" methodname="FullPlaythroughReachesResultsAndReturnsToMenu" classname="DriftTogether.Tests.SmokePlaythroughTests" runstate="Runnable" seed="805242044" result="Passed" start-time="2026-07-18 11:02:14Z" end-time="2026-07-18 11:02:47Z" duration="32.937774" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="900000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: /Users/vraiuk/Library/Application Support/DriftTogether/Drift Together/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

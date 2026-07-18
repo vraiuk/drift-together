@@ -1,0 +1,107 @@
+Mono path[0] = '/Users/vraiuk/WebstormProjects/drift-together/Builds/macOS/DriftTogether.app/Contents/Resources/Data/Managed'
+Mono config path = '/Users/vraiuk/WebstormProjects/drift-together/Builds/macOS/DriftTogether.app/Contents/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.3.20f1 (c9ba695d4f07)
+[Subsystems] Discovering subsystems at path /Users/vraiuk/WebstormProjects/drift-together/Builds/macOS/DriftTogether.app/Contents/Resources/Data/UnitySubsystems
+GfxDevice: creating device client; kGfxThreadingModeThreaded
+ preferred device: Apple M3 Max (high power)
+Metal devices available: 1
+0: Apple M3 Max (high power)
+Using device Apple M3 Max (high power)
+Initializing Metal device caps: Apple M3 Max
+Mac GPU Family: 2
+Apple GPU Family: 9
+MSL Version: 3.0
+Has Float MSAA: 1
+Has Float Filtering: 1
+ReadWrite Texture Tier: 2
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.148 seconds
+- Finished resetting the current domain, in  0.002 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Metal RecreateSurface[0x8bcd1f540]: surface size 3024x1898
+UnloadTime: 0.903583 ms
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 2.577000 ms
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+[SmokeCoop] pos=(0.00, 0.01, 4.00) wp=0/111 hull=5 vel=0.0
+Unloading 15 unused Assets to reduce memory usage. Loaded Objects now: 6445.
+Total: 1.215000 ms (FindLiveObjects: 0.134292 ms CreateObjectMapping: 0.037459 ms MarkObjects: 1.029083 ms  DeleteObjects: 0.014083 ms)
+
+[SmokeCoop] pos=(7.79, 0.12, 179.24) wp=31/111 hull=2 vel=5.6
+[SmokeCoop] pos=(3.82, 1.11, 238.56) wp=37/111 hull=2 vel=0.6
+[SmokeCoop] pos=(3.64, 1.05, 238.47) wp=37/111 hull=2 vel=2.9
+[SmokeCoop] pos=(3.75, 1.09, 238.48) wp=37/111 hull=2 vel=0.4
+[SmokeCoop] pos=(3.74, 1.10, 238.57) wp=37/111 hull=2 vel=2.5
+[SmokeCoop] pos=(3.77, 1.10, 238.50) wp=37/111 hull=2 vel=2.7
+[SmokeCoop] pos=(3.70, 1.07, 238.42) wp=37/111 hull=2 vel=2.4
+[SmokeCoop] pos=(3.81, 1.03, 238.51) wp=37/111 hull=2 vel=2.8
+[SmokeCoop] pos=(3.69, 0.99, 238.44) wp=37/111 hull=2 vel=1.6
+[SmokeCoop] pos=(3.63, 0.98, 238.46) wp=37/111 hull=2 vel=2.8
+[SmokeCoop] pos=(3.71, 1.01, 238.54) wp=37/111 hull=2 vel=2.8
+[SmokeCoop] pos=(3.76, 1.04, 238.57) wp=37/111 hull=2 vel=2.8
+[SmokeCoop] pos=(3.83, 1.06, 238.55) wp=37/111 hull=2 vel=2.8
+[SmokeCoop] pos=(3.80, 1.06, 238.58) wp=37/111 hull=2 vel=0.7
+[SmokeCoop] pos=(3.71, 1.04, 238.53) wp=37/111 hull=2 vel=1.8
+[SmokeCoop] pos=(3.75, 1.06, 238.58) wp=37/111 hull=2 vel=2.7
+[SmokeCoop] pos=(3.81, 1.08, 238.57) wp=37/111 hull=2 vel=3.0
+[SmokeCoop] pos=(3.93, 1.11, 238.63) wp=37/111 hull=2 vel=3.0
+[SmokeCoop] pos=(3.76, 1.06, 238.50) wp=37/111 hull=2 vel=2.8
+[SmokeCoop] pos=(3.66, 1.02, 238.41) wp=37/111 hull=2 vel=1.7
+[SmokeCoop] pos=(3.69, 1.05, 238.53) wp=37/111 hull=2 vel=1.7
+[SmokeCoop] pos=(3.71, 1.07, 238.53) wp=37/111 hull=2 vel=2.2
+[SmokeCoop] pos=(3.90, 1.14, 238.64) wp=37/111 hull=2 vel=2.8
+[SmokeCoop] pos=(3.94, 1.14, 238.56) wp=37/111 hull=2 vel=0.9
+[SmokeCoop] pos=(3.86, 1.10, 238.52) wp=37/111 hull=2 vel=3.0
+[SmokeCoop] pos=(3.92, 1.13, 238.57) wp=37/111 hull=2 vel=2.9
+[SmokeCoop] pos=(3.96, 1.14, 238.53) wp=37/111 hull=2 vel=0.9
+[SmokeCoop] pos=(3.67, 1.02, 238.49) wp=37/111 hull=2 vel=2.7
+[SmokeCoop] pos=(3.86, 1.06, 238.57) wp=37/111 hull=2 vel=1.0
+[SmokeCoop] pos=(3.71, 1.04, 238.50) wp=37/111 hull=2 vel=2.2
+[SmokeCoop] pos=(3.81, 1.13, 238.57) wp=37/111 hull=2 vel=0.6
+[SmokeCoop] pos=(3.95, 1.13, 238.63) wp=37/111 hull=2 vel=2.8
+[SmokeCoop] pos=(3.97, 1.16, 238.57) wp=37/111 hull=2 vel=2.9
+[SmokeCoop] pos=(3.71, 1.00, 238.43) wp=37/111 hull=2 vel=1.3
+[SmokeCoop] pos=(3.77, 1.07, 238.44) wp=37/111 hull=2 vel=0.8
+[SmokeCoop] pos=(3.75, 1.11, 238.59) wp=37/111 hull=2 vel=2.6
+[SmokeCoop] pos=(3.91, 1.10, 238.63) wp=37/111 hull=2 vel=2.8
+[SmokeCoop] pos=(3.61, 1.02, 238.40) wp=37/111 hull=2 vel=1.9
+[SmokeCoop] pos=(3.89, 1.07, 238.53) wp=37/111 hull=2 vel=1.0
+[SmokeCoop] pos=(3.68, 1.05, 238.42) wp=37/111 hull=2 vel=2.6
+[SmokeCoop] pos=(3.79, 1.01, 238.47) wp=37/111 hull=2 vel=3.0
+[SmokeCoop] pos=(3.70, 1.03, 238.47) wp=37/111 hull=2 vel=2.7
+[SmokeCoop] pos=(3.92, 1.11, 238.53) wp=37/111 hull=2 vel=3.0
+[SmokeCoop] pos=(3.63, 1.04, 238.40) wp=37/111 hull=2 vel=1.9
+[SmokeCoop] pos=(3.93, 1.10, 238.66) wp=37/111 hull=2 vel=2.8
+[SmokeCoop] pos=(3.86, 1.11, 238.48) wp=37/111 hull=2 vel=2.8
+[SmokeCoop] pos=(3.80, 1.07, 238.62) wp=37/111 hull=2 vel=2.8
+[SmokeCoop] result written to /Users/vraiuk/Library/Application Support/DriftTogether/Drift Together/smoke_result.json: {
+  "success": false,
+  "mode": "coop",
+  "elapsedGameSeconds": 3594.2,
+  "route": "None",
+  "raftCollisions": 3,
+  "hullAtFinish": 0,
+  "realSeconds": 720.0
+}
+Thread 0x16f85f000 may have been prematurely finalized
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input System polling thread exited.
+Input System module state changed to: Shutdown.
+Thread 0x16e003000 may have been prematurely finalized
+Thread 0x16e08f000 may have been prematurely finalized
+Thread 0x16e11b000 may have been prematurely finalized
+Thread 0x16e1a7000 may have been prematurely finalized

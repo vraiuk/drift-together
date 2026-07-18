@@ -14,6 +14,7 @@ namespace DriftTogether.Coop
         public float RudderSeconds;
         public int FishCaught;
         public int ZonesScouted;
+        public int Gathered;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
@@ -25,6 +26,7 @@ namespace DriftTogether.Coop
             serializer.SerializeValue(ref RudderSeconds);
             serializer.SerializeValue(ref FishCaught);
             serializer.SerializeValue(ref ZonesScouted);
+            serializer.SerializeValue(ref Gathered);
         }
     }
 
@@ -80,7 +82,8 @@ namespace DriftTogether.Coop
                     OarStrokes = p.OarStrokes,
                     RudderSeconds = p.RudderSeconds,
                     FishCaught = p.FishCaught,
-                    ZonesScouted = p.ZonesScouted
+                    ZonesScouted = p.ZonesScouted,
+                    Gathered = p.Gathered
                 };
             }
             return payload;
@@ -110,6 +113,7 @@ namespace DriftTogether.Coop
                 p.RudderSeconds = row.RudderSeconds;
                 p.FishCaught = row.FishCaught;
                 p.ZonesScouted = row.ZonesScouted;
+                p.Gathered = row.Gathered;
             }
             return stats;
         }
