@@ -58,5 +58,11 @@ namespace DriftTogether.Coop.Net
         {
             CoopBootstrap.Active?.ClientRighted();
         }
+
+        [Rpc(SendTo.Everyone)]
+        public void RevealZoneClientRpc(int zoneIndex)
+        {
+            CoopBootstrap.Active?.RevealZoneBuoys(zoneIndex);
+        }
     }
 }

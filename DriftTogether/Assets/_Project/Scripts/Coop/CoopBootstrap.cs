@@ -68,6 +68,7 @@ namespace DriftTogether.Coop
             foam.FoamMaterial = GameMaterials.Get("Foam");
 
             _dialogue = new DialogueQueue(new GameClock());
+            BuildScoutZones();
 
             var session = SessionManager.Ensure();
             session.ConnectionFailed += OnConnectionFailed;
@@ -265,6 +266,81 @@ namespace DriftTogether.Coop
             Active?.HostSay(LineCategory.Capsize, 0f);
         }
 
+        internal static void HostSayAnchorDragging()
+        {
+            Active?.HostSay(LineCategory.Anchor, 25f);
+        }
+
+        // ---------- Mooring & scouting (UC-06) ----------
+
+        static readonly Vector3[] MooringSpots =
+        {
+            new Vector3(5.5f, 0f, 534f),   // пристань с костром
+            new Vector3(-6f, 0f, 186f),    // тихая заводь перед развилкой
+            new Vector3(4f, 0f, 486f)      // слияние рукавов
+        };
+
+        public static bool InMooringZone(Vector3 position)
+        {
+            foreach (var spot in MooringSpots)
+            {
+                Vector3 d = position - spot;
+                d.y = 0f;
+                if (d.magnitude < 11f)
+                    return true;
+            }
+            return false;
+        }
+
+        public ScoutSystem Scouts { get; private set; }
+
+        void BuildScoutZones()
+        {
+            Scouts = new ScoutSystem();
+            Scouts.Zones.Add(new ScoutZone
+            {
+                Name = "Камни Шумного ручья",
+                StartZ = 262f,
+                EndZ = 340f,
+                SafeLine = SampleLine(_level.NoisySpline, 15f, 95f, 13f)
+            });
+            Scouts.Zones.Add(new ScoutZone
+            {
+                Name = "Финальные пороги",
+                StartZ = 575f,
+                EndZ = 705f,
+                SafeLine = SampleLine(_level.LowerSpline, 95f, 235f, 13f)
+            });
+        }
+
+        Vector3[] SampleLine(RiverSpline spline, float from, float to, float step)
+        {
+            var points = new System.Collections.Generic.List<Vector3>();
+            for (float d = from; d <= to; d += step)
+                points.Add(spline.PointAtDistance(d));
+            return points.ToArray();
+        }
+
+        internal void RevealZoneBuoys(int zoneIndex)
+        {
+            if (Scouts == null || zoneIndex < 0 || zoneIndex >= Scouts.Zones.Count)
+                return;
+            var zone = Scouts.Zones[zoneIndex];
+            zone.Scouted = true;
+            foreach (var point in zone.SafeLine)
+            {
+                var buoy = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                buoy.name = "Buoy";
+                Destroy(buoy.GetComponent<Collider>());
+                buoy.transform.position = new Vector3(point.x, 0.22f, point.z);
+                buoy.transform.localScale = Vector3.one * 0.34f;
+                GameMaterials.ApplyTo(buoy, "MushroomCap");
+            }
+            var am = AudioManager.Instance;
+            if (am != null)
+                am.PlaySfx(am.MushroomChime, 0.6f, 0.9f);
+        }
+
         internal void ClientCapsized()
         {
             var am = AudioManager.Instance;
@@ -362,6 +438,27 @@ namespace DriftTogether.Coop
             {
                 Stats.ElapsedSeconds += Time.deltaTime;
                 HostChatter();
+                HostCheckScouting();
+            }
+        }
+
+        void HostCheckScouting()
+        {
+            if (Scouts == null || Raft == null)
+                return;
+            float raftZ = Raft.transform.position.z;
+            foreach (var avatar in FindObjectsByType<PlayerAvatar>(FindObjectsSortMode.None))
+            {
+                var zone = Scouts.TryScout(avatar.OwnerClientId,
+                    avatar.transform.position.z, raftZ);
+                if (zone != null)
+                {
+                    int index = Scouts.Zones.IndexOf(zone);
+                    var stats = Stats.GetOrAdd(avatar.OwnerClientId);
+                    stats.ZonesScouted++;
+                    Raft.GetComponent<Net.CoopFlow>().RevealZoneClientRpc(index);
+                    HostSay(LineCategory.Scout, 0f);
+                }
             }
         }
 
@@ -419,6 +516,16 @@ namespace DriftTogether.Coop
                         Hud.SetHint("W — гребок, S — табань · E — отойти");
                         break;
                 }
+                return;
+            }
+            if (Raft.NearAnchor(own.transform.position, 1.3f))
+            {
+                var anchorState = (AnchorState)Raft.AnchorSync.Value;
+                Hud.SetHint(anchorState == AnchorState.Raised
+                    ? "E — бросить якорь"
+                    : anchorState == AnchorState.Dragging
+                        ? "Якорь ползёт! E — поднять"
+                        : "E — поднять якорь");
                 return;
             }
             if (Raft.NearestPost(own.transform.position, 1.4f) != RaftPost.None)

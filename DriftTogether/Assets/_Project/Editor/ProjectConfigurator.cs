@@ -47,7 +47,7 @@ namespace DriftTogether.EditorTools
         {
             PlayerSettings.companyName = "DriftTogether";
             PlayerSettings.productName = "Drift Together";
-            PlayerSettings.bundleVersion = "0.4.0";
+            PlayerSettings.bundleVersion = "0.5.0";
             PlayerSettings.colorSpace = ColorSpace.Linear;
             PlayerSettings.defaultScreenWidth = 1600;
             PlayerSettings.defaultScreenHeight = 900;

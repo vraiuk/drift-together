@@ -15,7 +15,9 @@ namespace DriftTogether.Core
         Idle,
         Respawn,
         Fishing,
-        Capsize
+        Capsize,
+        Anchor,
+        Scout
     }
 
     /// <summary>

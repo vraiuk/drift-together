@@ -31,6 +31,11 @@ namespace DriftTogether.Coop.Net
         /// <summary>Host-side balance model (UC-08).</summary>
         public CapsizeSystem Balance { get; } = new CapsizeSystem();
 
+        public NetworkVariable<int> AnchorSync = new NetworkVariable<int>((int)AnchorState.Raised);
+        /// <summary>Host-side anchor model (UC-06).</summary>
+        public AnchorSystem Anchor { get; private set; }
+        Transform _anchorMarker;
+
         public PostSystem Posts { get; } = new PostSystem();
         public HullIntegrity Integrity { get; private set; }
 
@@ -71,7 +76,10 @@ namespace DriftTogether.Coop.Net
                 };
 
             if (IsServer)
+            {
                 Integrity = new HullIntegrity(new GameClock(), MaxHull);
+                Anchor = new AnchorSystem(new GameClock(), unchecked((int)Time.frameCount * 31 + 7));
+            }
 
             BuildVisuals();
             CoopBootstrap.RegisterRaft(this);
@@ -186,7 +194,32 @@ namespace DriftTogether.Coop.Net
             // Fishing rod stands at the bow corners (UC-04).
             _rodStands[0] = CreateRodStand(new Vector3(-1.4f, 0.35f, 1.25f));
             _rodStands[1] = CreateRodStand(new Vector3(1.4f, 0.35f, 1.25f));
+
+            // Anchor winch at the bow (UC-06).
+            _anchorMarker = new GameObject("AnchorSpot").transform;
+            _anchorMarker.SetParent(transform, false);
+            _anchorMarker.localPosition = new Vector3(0f, 0.4f, 1.7f);
+            var winch = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            winch.name = "AnchorWinch";
+            winch.transform.SetParent(_anchorMarker, false);
+            winch.transform.localScale = new Vector3(0.4f, 0.3f, 0.3f);
+            GameMaterials.ApplyTo(winch, "Rock");
+            Destroy(winch.GetComponent<Collider>());
+            _anchorRope = new GameObject("AnchorRope").transform;
+            var rope = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            rope.transform.SetParent(_anchorRope, false);
+            rope.transform.localScale = new Vector3(0.05f, 0.5f, 0.05f);
+            rope.transform.localPosition = new Vector3(0f, -0.5f, 0f);
+            GameMaterials.ApplyTo(rope, "TreeTrunk");
+            Destroy(rope.GetComponent<Collider>());
+            _anchorRope.SetParent(_anchorMarker, false);
+            _anchorRope.gameObject.SetActive(false);
         }
+
+        Transform _anchorRope;
+
+        public bool NearAnchor(Vector3 position, float radius) =>
+            _anchorMarker != null && Vector3.Distance(position, _anchorMarker.position) < radius;
 
         readonly Transform[] _rodStands = new Transform[2];
         readonly bool[] _rodTaken = new bool[2];
@@ -351,10 +384,25 @@ namespace DriftTogether.Coop.Net
                 return;
             float dt = Time.fixedDeltaTime;
 
-            if (_flow != null)
-                _body.AddForce(_flow.CurrentAt(transform.position) * 1.05f, ForceMode.Acceleration);
-
             UpdateBalance(dt);
+            UpdateAnchor(dt);
+
+            if (Anchor != null && Anchor.State == AnchorState.Holding && !Capsized.Value)
+            {
+                // Held in place: bleed velocity, keep only the water bob.
+                _body.linearVelocity = Vector3.Lerp(_body.linearVelocity, Vector3.zero, dt * 4f);
+                Vector3 apos = _body.position;
+                apos.y = Mathf.Lerp(apos.y, RiverFlow.WaterHeightAt(apos, Time.time) + 0.12f, dt * 5f);
+                _body.MovePosition(apos);
+                _repairCooldown -= dt;
+                return;
+            }
+
+            if (_flow != null)
+            {
+                float anchorFactor = Anchor != null && Anchor.State == AnchorState.Dragging ? 0.45f : 1.05f;
+                _body.AddForce(_flow.CurrentAt(transform.position) * anchorFactor, ForceMode.Acceleration);
+            }
 
             if (Capsized.Value)
             {
@@ -494,6 +542,43 @@ namespace DriftTogether.Coop.Net
         {
             Capsized.Value = false;
             GetComponent<CoopFlow>().RightedClientRpc();
+        }
+
+        void UpdateAnchor(float dt)
+        {
+            if (Anchor == null)
+                return;
+            float current = _flow != null ? _flow.CurrentAt(transform.position).magnitude : 0f;
+            Anchor.UpdateConditions(current, CoopBootstrap.InMooringZone(transform.position));
+            var before = Anchor.State;
+            Anchor.Tick();
+            if (Anchor.State != before && Anchor.State == AnchorState.Dragging)
+            {
+                GetComponent<CoopFlow>().RaftBumpClientRpc();
+                CoopBootstrap.HostSayAnchorDragging();
+            }
+            if (AnchorSync.Value != (int)Anchor.State)
+                AnchorSync.Value = (int)Anchor.State;
+            if (_anchorRope != null)
+                _anchorRope.gameObject.SetActive(Anchor.IsDown);
+        }
+
+        [Rpc(SendTo.Server, RequireOwnership = false)]
+        public void ToggleAnchorServerRpc(RpcParams p = default)
+        {
+            if (Anchor == null || Capsized.Value)
+                return;
+            if (Anchor.IsDown)
+            {
+                Anchor.Raise();
+            }
+            else
+            {
+                float current = _flow != null ? _flow.CurrentAt(transform.position).magnitude : 0f;
+                Anchor.Drop(current, CoopBootstrap.InMooringZone(transform.position));
+            }
+            AnchorSync.Value = (int)Anchor.State;
+            GetComponent<CoopFlow>().RaftBumpClientRpc();
         }
 
         [Rpc(SendTo.Server, RequireOwnership = false)]

@@ -1,0 +1,89 @@
+Mono path[0] = '/Users/vraiuk/WebstormProjects/drift-together/Builds/macOS/DriftTogether.app/Contents/Resources/Data/Managed'
+Mono config path = '/Users/vraiuk/WebstormProjects/drift-together/Builds/macOS/DriftTogether.app/Contents/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.3.20f1 (c9ba695d4f07)
+[Subsystems] Discovering subsystems at path /Users/vraiuk/WebstormProjects/drift-together/Builds/macOS/DriftTogether.app/Contents/Resources/Data/UnitySubsystems
+GfxDevice: creating device client; kGfxThreadingModeThreaded
+ preferred device: Apple M3 Max (high power)
+Metal devices available: 1
+0: Apple M3 Max (high power)
+Using device Apple M3 Max (high power)
+Initializing Metal device caps: Apple M3 Max
+Mac GPU Family: 2
+Apple GPU Family: 9
+MSL Version: 3.0
+Has Float MSAA: 1
+Has Float Filtering: 1
+ReadWrite Texture Tier: 2
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.164 seconds
+- Finished resetting the current domain, in  0.002 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Metal RecreateSurface[0x94d4d6700]: surface size 3024x1898
+UnloadTime: 0.737458 ms
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 3.066125 ms
+[SmokeCoop] pos=(0.00, 0.00, 4.00) wp=0/111 hull=5 vel=0.0
+Unloading 7 unused Assets to reduce memory usage. Loaded Objects now: 6234.
+Total: 1.321750 ms (FindLiveObjects: 0.132458 ms CreateObjectMapping: 0.038333 ms MarkObjects: 1.138875 ms  DeleteObjects: 0.011958 ms)
+
+[SmokeCoop] pos=(7.98, 0.16, 183.47) wp=32/111 hull=2 vel=5.6
+[SmokeCoop] pos=(22.59, 0.19, 381.02) wp=59/111 hull=0 vel=0.3
+[SmokeCoop] pos=(10.51, 0.04, 528.12) wp=79/111 hull=5 vel=1.1
+[SmokeCoop] pos=(4.52, 0.11, 530.70) wp=79/111 hull=5 vel=0.0
+[SmokeCoop] pos=(3.92, 0.19, 530.04) wp=79/111 hull=5 vel=2.4
+[SmokeCoop] pos=(11.11, 0.09, 527.62) wp=79/111 hull=5 vel=1.4
+[SmokeCoop] pos=(7.20, 0.12, 530.70) wp=79/111 hull=5 vel=0.0
+[SmokeCoop] pos=(6.90, 0.21, 530.70) wp=79/111 hull=5 vel=0.0
+[SmokeCoop] pos=(3.87, 0.16, 530.81) wp=79/111 hull=5 vel=0.0
+[SmokeCoop] pos=(4.50, 0.22, 530.70) wp=79/111 hull=5 vel=0.0
+[SmokeCoop] pos=(5.99, 0.13, 527.67) wp=79/111 hull=5 vel=4.0
+[SmokeCoop] pos=(8.52, 0.11, 527.23) wp=79/111 hull=5 vel=4.2
+[SmokeCoop] pos=(4.08, 0.12, 526.47) wp=79/111 hull=5 vel=4.3
+[SmokeCoop] pos=(2.03, 0.20, 528.85) wp=79/111 hull=5 vel=4.3
+[SmokeCoop] pos=(4.57, 0.14, 526.42) wp=79/111 hull=5 vel=3.8
+[SmokeCoop] pos=(5.35, 0.12, 530.70) wp=79/111 hull=5 vel=0.0
+[SmokeCoop] pos=(6.68, 0.20, 530.70) wp=79/111 hull=5 vel=0.0
+[SmokeCoop] pos=(3.92, 0.12, 530.79) wp=79/111 hull=5 vel=0.0
+[SmokeCoop] pos=(5.44, 0.20, 530.70) wp=79/111 hull=5 vel=0.0
+[SmokeCoop] pos=(2.81, 0.12, 529.16) wp=79/111 hull=5 vel=3.5
+[SmokeCoop] pos=(1.97, 0.19, 525.75) wp=79/111 hull=5 vel=1.8
+[SmokeCoop] pos=(1.66, 0.13, 526.91) wp=79/111 hull=5 vel=1.7
+[SmokeCoop] pos=(0.44, 0.21, 527.34) wp=79/111 hull=5 vel=2.8
+[SmokeCoop] pos=(5.47, 0.14, 530.16) wp=79/111 hull=5 vel=2.1
+[SmokeCoop] pos=(3.25, 0.05, 529.53) wp=79/111 hull=5 vel=3.1
+[SmokeCoop] pos=(4.55, 0.19, 526.28) wp=79/111 hull=5 vel=4.7
+[SmokeCoop] pos=(0.75, 0.11, 526.54) wp=79/111 hull=5 vel=1.5
+[SmokeCoop] pos=(5.07, 0.03, 530.68) wp=79/111 hull=5 vel=2.5
+[SmokeCoop] pos=(3.78, 0.09, 530.83) wp=79/111 hull=5 vel=0.3
+[SmokeCoop] pos=(3.86, 0.04, 530.81) wp=79/111 hull=5 vel=0.0
+[SmokeCoop] pos=(6.99, 0.07, 530.70) wp=79/111 hull=5 vel=0.0
+[SmokeCoop] pos=(7.24, 0.08, 530.70) wp=79/111 hull=5 vel=0.0
+[SmokeCoop] pos=(7.04, 0.04, 530.70) wp=79/111 hull=5 vel=0.0
+[SmokeCoop] result written to /Users/vraiuk/Library/Application Support/DriftTogether/Drift Together/smoke_result.json: {
+  "success": true,
+  "mode": "coop",
+  "elapsedGameSeconds": 2525.1,
+  "route": "NoisyStream",
+  "raftCollisions": 8,
+  "hullAtFinish": 2,
+  "realSeconds": 509.6
+}
+Thread 0x171b3b000 may have been prematurely finalized
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input System polling thread exited.
+Input System module state changed to: Shutdown.
+Thread 0x17059b000 may have been prematurely finalized
+Thread 0x17036b000 may have been prematurely finalized
+Thread 0x1703f7000 may have been prematurely finalized
+Thread 0x170483000 may have been prematurely finalized
+Thread 0x17050f000 may have been prematurely finalized

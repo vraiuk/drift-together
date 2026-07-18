@@ -289,6 +289,12 @@ namespace DriftTogether.Coop.Net
                 if (fishing != null && fishing.TryHandleInteract())
                     return;
 
+                if (Raft.NearAnchor(transform.position, 1.3f))
+                {
+                    Raft.ToggleAnchorServerRpc();
+                    return;
+                }
+
                 RaftPost nearest = Raft.NearestPost(transform.position, 1.4f);
                 if (nearest != RaftPost.None)
                 {
