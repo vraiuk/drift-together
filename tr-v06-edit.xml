@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="47" result="Passed" total="47" passed="47" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.074574">
+  <test-suite type="TestSuite" id="1000" name="Drift Together" fullname="Drift Together" runstate="Runnable" testcasecount="47" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.074574" total="47" passed="47" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1063" name="DriftTogether.Tests.EditMode.dll" fullname="/Users/vraiuk/WebstormProjects/drift-together/DriftTogether/Library/ScriptAssemblies/DriftTogether.Tests.EditMode.dll" runstate="Runnable" testcasecount="47" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.070780" total="47" passed="47" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1128" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1064" name="DriftTogether" fullname="DriftTogether" runstate="Runnable" testcasecount="47" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.070440" total="47" passed="47" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1065" name="Tests" fullname="DriftTogether.Tests" runstate="Runnable" testcasecount="47" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.069921" total="47" passed="47" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1053" name="AdriftRuleTests" fullname="DriftTogether.Tests.AdriftRuleTests" classname="DriftTogether.Tests.AdriftRuleTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.015094" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1056" name="BoardingResetsTheTimer" fullname="DriftTogether.Tests.AdriftRuleTests.BoardingResetsTheTimer" methodname="BoardingResetsTheTimer" classname="DriftTogether.Tests.AdriftRuleTests" runstate="Runnable" seed="593702330" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.005551" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1055" name="CrewOrAnchorOrCapsizePreventsAdrift" fullname="DriftTogether.Tests.AdriftRuleTests.CrewOrAnchorOrCapsizePreventsAdrift" methodname="CrewOrAnchorOrCapsizePreventsAdrift" classname="DriftTogether.Tests.AdriftRuleTests" runstate="Runnable" seed="357319996" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000797" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1054" name="RequiresSustainedAbandonment" fullname="DriftTogether.Tests.AdriftRuleTests.RequiresSustainedAbandonment" methodname="RequiresSustainedAbandonment" classname="DriftTogether.Tests.AdriftRuleTests" runstate="Runnable" seed="405375613" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000375" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1001" name="AnchorSystemTests" fullname="DriftTogether.Tests.AnchorSystemTests" classname="DriftTogether.Tests.AnchorSystemTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.004552" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1003" name="DragsAfterAWhileInStrongCurrent" fullname="DriftTogether.Tests.AnchorSystemTests.DragsAfterAWhileInStrongCurrent" methodname="DragsAfterAWhileInStrongCurrent" classname="DriftTogether.Tests.AnchorSystemTests" runstate="Runnable" seed="1482300060" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.002541" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1002" name="HoldsForeverInCalmWater" fullname="DriftTogether.Tests.AnchorSystemTests.HoldsForeverInCalmWater" methodname="HoldsForeverInCalmWater" classname="DriftTogether.Tests.AnchorSystemTests" runstate="Runnable" seed="401360765" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000266" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1004" name="MooringZoneAlwaysHolds" fullname="DriftTogether.Tests.AnchorSystemTests.MooringZoneAlwaysHolds" methodname="MooringZoneAlwaysHolds" classname="DriftTogether.Tests.AnchorSystemTests" runstate="Runnable" seed="198839850" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000099" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1005" name="RaiseResetsAndAllowsRedrop" fullname="DriftTogether.Tests.AnchorSystemTests.RaiseResetsAndAllowsRedrop" methodname="RaiseResetsAndAllowsRedrop" classname="DriftTogether.Tests.AnchorSystemTests" runstate="Runnable" seed="2068306604" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000197" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1011" name="CapsizeSystemTests" fullname="DriftTogether.Tests.CapsizeSystemTests" classname="DriftTogether.Tests.CapsizeSystemTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.012935" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1013" name="BalancedCrewNeverCapsizes" fullname="DriftTogether.Tests.CapsizeSystemTests.BalancedCrewNeverCapsizes" methodname="BalancedCrewNeverCapsizes" classname="DriftTogether.Tests.CapsizeSystemTests" runstate="Runnable" seed="604694052" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.004251" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1018" name="FoodLossIsFortyPercentRoundedUp" fullname="DriftTogether.Tests.CapsizeSystemTests.FoodLossIsFortyPercentRoundedUp" methodname="FoodLossIsFortyPercentRoundedUp" classname="DriftTogether.Tests.CapsizeSystemTests" runstate="Runnable" seed="702314366" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000457" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1012" name="FullCrewOnOneRailEventuallyCapsizes" fullname="DriftTogether.Tests.CapsizeSystemTests.FullCrewOnOneRailEventuallyCapsizes" methodname="FullCrewOnOneRailEventuallyCapsizes" classname="DriftTogether.Tests.CapsizeSystemTests" runstate="Runnable" seed="965632808" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000332" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1016" name="HitKicksAccumulateIntoCapsize" fullname="DriftTogether.Tests.CapsizeSystemTests.HitKicksAccumulateIntoCapsize" methodname="HitKicksAccumulateIntoCapsize" classname="DriftTogether.Tests.CapsizeSystemTests" runstate="Runnable" seed="616370548" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000117" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1014" name="LoneOffCenterPlayerIsSafe" fullname="DriftTogether.Tests.CapsizeSystemTests.LoneOffCenterPlayerIsSafe" methodname="LoneOffCenterPlayerIsSafe" classname="DriftTogether.Tests.CapsizeSystemTests" runstate="Runnable" seed="1075835238" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.004275" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1017" name="RightingNeedsJointEffort" fullname="DriftTogether.Tests.CapsizeSystemTests.RightingNeedsJointEffort" methodname="RightingNeedsJointEffort" classname="DriftTogether.Tests.CapsizeSystemTests" runstate="Runnable" seed="1528452155" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000493" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1015" name="TiltRecoversWhenCrewCentres" fullname="DriftTogether.Tests.CapsizeSystemTests.TiltRecoversWhenCrewCentres" methodname="TiltRecoversWhenCrewCentres" classname="DriftTogether.Tests.CapsizeSystemTests" runstate="Runnable" seed="969891904" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.001016" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1040" name="CheckpointSystemTests" fullname="DriftTogether.Tests.CheckpointSystemTests" classname="DriftTogether.Tests.CheckpointSystemTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.001663" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1041" name="RespawnUsesTheLatestCheckpoint" fullname="DriftTogether.Tests.CheckpointSystemTests.RespawnUsesTheLatestCheckpoint" methodname="RespawnUsesTheLatestCheckpoint" classname="DriftTogether.Tests.CheckpointSystemTests" runstate="Runnable" seed="1184688762" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000733" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1019" name="CoopStatsTests" fullname="DriftTogether.Tests.CoopStatsTests" classname="DriftTogether.Tests.CoopStatsTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.005152" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1021" name="DryNominationListsOnlyDryPlayers" fullname="DriftTogether.Tests.CoopStatsTests.DryNominationListsOnlyDryPlayers" methodname="DryNominationListsOnlyDryPlayers" classname="DriftTogether.Tests.CoopStatsTests" runstate="Runnable" seed="573877761" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.002118" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1022" name="EmptyMetricsProduceNoNomination" fullname="DriftTogether.Tests.CoopStatsTests.EmptyMetricsProduceNoNomination" methodname="EmptyMetricsProduceNoNomination" classname="DriftTogether.Tests.CoopStatsTests" runstate="Runnable" seed="1508890994" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000557" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1020" name="NominationsPickMaxPerCategory" fullname="DriftTogether.Tests.CoopStatsTests.NominationsPickMaxPerCategory" methodname="NominationsPickMaxPerCategory" classname="DriftTogether.Tests.CoopStatsTests" runstate="Runnable" seed="2025658525" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000363" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1023" name="PlayersGetStableNamesById" fullname="DriftTogether.Tests.CoopStatsTests.PlayersGetStableNamesById" methodname="PlayersGetStableNamesById" classname="DriftTogether.Tests.CoopStatsTests" runstate="Runnable" seed="1843675282" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000892" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1047" name="DialogueQueueTests" fullname="DriftTogether.Tests.DialogueQueueTests" classname="DriftTogether.Tests.DialogueQueueTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.002402" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1048" name="CategoryCooldownPreventsSpam" fullname="DriftTogether.Tests.DialogueQueueTests.CategoryCooldownPreventsSpam" methodname="CategoryCooldownPreventsSpam" classname="DriftTogether.Tests.DialogueQueueTests" runstate="Runnable" seed="1300573017" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.001766" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1049" name="DriftCatchTests" fullname="DriftTogether.Tests.DriftCatchTests" classname="DriftTogether.Tests.DriftCatchTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.002168" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1051" name="CatchLinesHaveNoSoftlockGaps" fullname="DriftTogether.Tests.DriftCatchTests.CatchLinesHaveNoSoftlockGaps" methodname="CatchLinesHaveNoSoftlockGaps" classname="DriftTogether.Tests.DriftCatchTests" runstate="Runnable" seed="658352326" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000359" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1052" name="MinimumDriftBeforeCatch" fullname="DriftTogether.Tests.DriftCatchTests.MinimumDriftBeforeCatch" methodname="MinimumDriftBeforeCatch" classname="DriftTogether.Tests.DriftCatchTests" runstate="Runnable" seed="330157219" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000127" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1050" name="SnagLineIsAlwaysDownstream" fullname="DriftTogether.Tests.DriftCatchTests.SnagLineIsAlwaysDownstream" methodname="SnagLineIsAlwaysDownstream" classname="DriftTogether.Tests.DriftCatchTests" runstate="Runnable" seed="1638288267" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000271" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1057" name="FishingSessionTests" fullname="DriftTogether.Tests.FishingSessionTests" classname="DriftTogether.Tests.FishingSessionTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.003574" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1061" name="BigFishStruggleAndFriendAssist" fullname="DriftTogether.Tests.FishingSessionTests.BigFishStruggleAndFriendAssist" methodname="BigFishStruggleAndFriendAssist" classname="DriftTogether.Tests.FishingSessionTests" runstate="Runnable" seed="146103988" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000447" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1058" name="CalmSpotBitesWithinTenSeconds" fullname="DriftTogether.Tests.FishingSessionTests.CalmSpotBitesWithinTenSeconds" methodname="CalmSpotBitesWithinTenSeconds" classname="DriftTogether.Tests.FishingSessionTests" runstate="Runnable" seed="1159197589" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000182" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1062" name="FishermanNominationGoesToTopCatcher" fullname="DriftTogether.Tests.FishingSessionTests.FishermanNominationGoesToTopCatcher" methodname="FishermanNominationGoesToTopCatcher" classname="DriftTogether.Tests.FishingSessionTests" runstate="Runnable" seed="2141957592" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000227" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1059" name="MissingTheBiteWindowLosesTheFish" fullname="DriftTogether.Tests.FishingSessionTests.MissingTheBiteWindowLosesTheFish" methodname="MissingTheBiteWindowLosesTheFish" classname="DriftTogether.Tests.FishingSessionTests" runstate="Runnable" seed="285655176" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000340" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1060" name="SmallFishLandsOnHook" fullname="DriftTogether.Tests.FishingSessionTests.SmallFishLandsOnHook" methodname="SmallFishLandsOnHook" classname="DriftTogether.Tests.FishingSessionTests" runstate="Runnable" seed="1363855044" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000132" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1034" name="HullIntegrityMaxPointsTests" fullname="DriftTogether.Tests.HullIntegrityMaxPointsTests" classname="DriftTogether.Tests.HullIntegrityMaxPointsTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.001742" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1035" name="CustomMaxPointsWorkForRaft" fullname="DriftTogether.Tests.HullIntegrityMaxPointsTests.CustomMaxPointsWorkForRaft" methodname="CustomMaxPointsWorkForRaft" classname="DriftTogether.Tests.HullIntegrityMaxPointsTests" runstate="Runnable" seed="921889081" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000371" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1036" name="HullIntegrityTests" fullname="DriftTogether.Tests.HullIntegrityTests" classname="DriftTogether.Tests.HullIntegrityTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.002006" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1039" name="BreaksAtZeroAndRestoresToFull" fullname="DriftTogether.Tests.HullIntegrityTests.BreaksAtZeroAndRestoresToFull" methodname="BreaksAtZeroAndRestoresToFull" classname="DriftTogether.Tests.HullIntegrityTests" runstate="Runnable" seed="2068945401" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000344" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1038" name="InvulnerabilityWindowBlocksImmediateSecondHit" fullname="DriftTogether.Tests.HullIntegrityTests.InvulnerabilityWindowBlocksImmediateSecondHit" methodname="InvulnerabilityWindowBlocksImmediateSecondHit" classname="DriftTogether.Tests.HullIntegrityTests" runstate="Runnable" seed="1375179108" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000153" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1037" name="StartsAtMaxAndLosesOnePointPerHit" fullname="DriftTogether.Tests.HullIntegrityTests.StartsAtMaxAndLosesOnePointPerHit" methodname="StartsAtMaxAndLosesOnePointPerHit" classname="DriftTogether.Tests.HullIntegrityTests" runstate="Runnable" seed="2040548489" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000095" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1042" name="MushroomTrackerTests" fullname="DriftTogether.Tests.MushroomTrackerTests" classname="DriftTogether.Tests.MushroomTrackerTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.001395" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1043" name="CountsEachMushroomOnlyOnce" fullname="DriftTogether.Tests.MushroomTrackerTests.CountsEachMushroomOnlyOnce" methodname="CountsEachMushroomOnlyOnce" classname="DriftTogether.Tests.MushroomTrackerTests" runstate="Runnable" seed="1563612746" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000489" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1044" name="SurvivesRespawnScenario" fullname="DriftTogether.Tests.MushroomTrackerTests.SurvivesRespawnScenario" methodname="SurvivesRespawnScenario" classname="DriftTogether.Tests.MushroomTrackerTests" runstate="Runnable" seed="124569351" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000144" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1024" name="PostSystemTests" fullname="DriftTogether.Tests.PostSystemTests" classname="DriftTogether.Tests.PostSystemTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.004332" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1028" name="NonePostCannotBeOccupied" fullname="DriftTogether.Tests.PostSystemTests.NonePostCannotBeOccupied" methodname="NonePostCannotBeOccupied" classname="DriftTogether.Tests.PostSystemTests" runstate="Runnable" seed="267062778" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000459" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1025" name="OnePlayerPerPost" fullname="DriftTogether.Tests.PostSystemTests.OnePlayerPerPost" methodname="OnePlayerPerPost" classname="DriftTogether.Tests.PostSystemTests" runstate="Runnable" seed="710217107" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.001474" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1027" name="ReleaseAllOnOverboard" fullname="DriftTogether.Tests.PostSystemTests.ReleaseAllOnOverboard" methodname="ReleaseAllOnOverboard" classname="DriftTogether.Tests.PostSystemTests" runstate="Runnable" seed="1614825616" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000609" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1026" name="SwitchingPostsReleasesThePreviousOne" fullname="DriftTogether.Tests.PostSystemTests.SwitchingPostsReleasesThePreviousOne" methodname="SwitchingPostsReleasesThePreviousOne" classname="DriftTogether.Tests.PostSystemTests" runstate="Runnable" seed="949109517" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000202" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1045" name="RunStatsTests" fullname="DriftTogether.Tests.RunStatsTests" classname="DriftTogether.Tests.RunStatsTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000931" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1046" name="RouteChoiceIsStoredForResults" fullname="DriftTogether.Tests.RunStatsTests.RouteChoiceIsStoredForResults" methodname="RouteChoiceIsStoredForResults" classname="DriftTogether.Tests.RunStatsTests" runstate="Runnable" seed="1100299879" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000187" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1006" name="ScoutSystemTests" fullname="DriftTogether.Tests.ScoutSystemTests" classname="DriftTogether.Tests.ScoutSystemTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.003121" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1008" name="NoCreditWhenRaftIsAlreadyThere" fullname="DriftTogether.Tests.ScoutSystemTests.NoCreditWhenRaftIsAlreadyThere" methodname="NoCreditWhenRaftIsAlreadyThere" classname="DriftTogether.Tests.ScoutSystemTests" runstate="Runnable" seed="990045604" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000452" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1007" name="ScoutAheadOfRaftRevealsZone" fullname="DriftTogether.Tests.ScoutSystemTests.ScoutAheadOfRaftRevealsZone" methodname="ScoutAheadOfRaftRevealsZone" classname="DriftTogether.Tests.ScoutSystemTests" runstate="Runnable" seed="1039722105" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000783" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1010" name="ScoutNominationCounts" fullname="DriftTogether.Tests.ScoutSystemTests.ScoutNominationCounts" methodname="ScoutNominationCounts" classname="DriftTogether.Tests.ScoutSystemTests" runstate="Runnable" seed="817945610" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000198" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1009" name="ZoneRevealsOnlyOnce" fullname="DriftTogether.Tests.ScoutSystemTests.ZoneRevealsOnlyOnce" methodname="ZoneRevealsOnlyOnce" classname="DriftTogether.Tests.ScoutSystemTests" runstate="Runnable" seed="2104560123" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000290" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1029" name="WetStatusTests" fullname="DriftTogether.Tests.WetStatusTests" classname="DriftTogether.Tests.WetStatusTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.003401" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1032" name="CampfireDriesFourTimesFaster" fullname="DriftTogether.Tests.WetStatusTests.CampfireDriesFourTimesFaster" methodname="CampfireDriesFourTimesFaster" classname="DriftTogether.Tests.WetStatusTests" runstate="Runnable" seed="1780020089" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000195" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1031" name="DriesInSixtySecondsAwayFromFire" fullname="DriftTogether.Tests.WetStatusTests.DriesInSixtySecondsAwayFromFire" methodname="DriesInSixtySecondsAwayFromFire" classname="DriftTogether.Tests.WetStatusTests" runstate="Runnable" seed="2091392550" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000199" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1033" name="ResoakResetsTimerAndAccumulatesTotal" fullname="DriftTogether.Tests.WetStatusTests.ResoakResetsTimerAndAccumulatesTotal" methodname="ResoakResetsTimerAndAccumulatesTotal" classname="DriftTogether.Tests.WetStatusTests" runstate="Runnable" seed="661238887" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000877" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1030" name="SoakMakesWetAndSlow" fullname="DriftTogether.Tests.WetStatusTests.SoakMakesWetAndSlow" methodname="SoakMakesWetAndSlow" classname="DriftTogether.Tests.WetStatusTests" runstate="Runnable" seed="466408331" result="Passed" start-time="2026-07-18 10:21:49Z" end-time="2026-07-18 10:21:49Z" duration="0.000127" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: /Users/vraiuk/Library/Application Support/DriftTogether/Drift Together/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

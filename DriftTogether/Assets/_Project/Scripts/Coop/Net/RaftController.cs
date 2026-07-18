@@ -36,6 +36,11 @@ namespace DriftTogether.Coop.Net
         public AnchorSystem Anchor { get; private set; }
         Transform _anchorMarker;
 
+        /// <summary>UC-09: покинутый плот уплывает и цепляется ниже по течению.</summary>
+        public NetworkVariable<bool> Snagged = new NetworkVariable<bool>(false);
+        public readonly AdriftRule Adrift = new AdriftRule();
+        float _snagLineZ = float.NaN;
+
         public PostSystem Posts { get; } = new PostSystem();
         public HullIntegrity Integrity { get; private set; }
 
@@ -386,6 +391,18 @@ namespace DriftTogether.Coop.Net
 
             UpdateBalance(dt);
             UpdateAnchor(dt);
+            UpdateAdrift(dt);
+
+            if (Snagged.Value)
+            {
+                // Застрял в камнях: стоит на месте, ждёт экипаж.
+                _body.linearVelocity = Vector3.Lerp(_body.linearVelocity, Vector3.zero, dt * 6f);
+                Vector3 spos = _body.position;
+                spos.y = Mathf.Lerp(spos.y, RiverFlow.WaterHeightAt(spos, Time.time) + 0.12f, dt * 5f);
+                _body.MovePosition(spos);
+                _repairCooldown -= dt;
+                return;
+            }
 
             if (Anchor != null && Anchor.State == AnchorState.Holding && !Capsized.Value)
             {
@@ -542,6 +559,54 @@ namespace DriftTogether.Coop.Net
         {
             Capsized.Value = false;
             GetComponent<CoopFlow>().RightedClientRpc();
+        }
+
+        void UpdateAdrift(float dt)
+        {
+            // The smoke autopilot is a ghost helmsman: the raft is never abandoned.
+            bool anyoneAboard = _crewX.Count > 0 || Mathf.Abs(AutoThrust) > 0.01f;
+            bool anchorHolding = Anchor != null && Anchor.State == AnchorState.Holding;
+
+            if (Snagged.Value)
+            {
+                // Экипаж вернулся на борт — плот освобождается.
+                if (anyoneAboard)
+                {
+                    Snagged.Value = false;
+                    Adrift.Reset();
+                    _snagLineZ = float.NaN;
+                    GetComponent<CoopFlow>().RaftBumpClientRpc();
+                }
+                return;
+            }
+
+            bool justAdrift = Adrift.Tick(dt, anyoneAboard, anchorHolding, Capsized.Value);
+            if (justAdrift)
+            {
+                _snagLineZ = DriftCatch.SnagLineFor(transform.position.z);
+                if (_stats != null)
+                    _stats.RaftLosses++;
+                CoopBootstrap.HostSayRaftLost();
+            }
+
+            if (Adrift.IsAdrift && anyoneAboard)
+            {
+                Adrift.Reset();
+                _snagLineZ = float.NaN;
+            }
+
+            if (Adrift.IsAdrift && !float.IsNaN(_snagLineZ) &&
+                transform.position.z >= _snagLineZ)
+            {
+                // Река вернула плот: зацепился за камни, ждёт команду.
+                Snagged.Value = true;
+                Adrift.Reset();
+                _snagLineZ = float.NaN;
+                if (Integrity != null && Integrity.Current > 1 && Integrity.ApplyHit())
+                    Hull.Value = Integrity.Current; // лёгкая цена за побег
+                GetComponent<CoopFlow>().RaftHitClientRpc(3f);
+                CoopBootstrap.HostSayRaftSnagged();
+            }
         }
 
         void UpdateAnchor(float dt)

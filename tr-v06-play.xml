@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Failed(Child)" total="4" passed="2" failed="1" inconclusive="0" skipped="1" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-07-18 10:22:03Z" end-time="2026-07-18 10:36:36Z" duration="873.2813186">
+  <test-suite type="TestSuite" id="1015" name="Drift Together" fullname="Drift Together" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-07-18 10:22:03Z" end-time="2026-07-18 10:36:36Z" duration="873.281319" total="4" passed="2" failed="1" inconclusive="0" skipped="1" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1009" name="DriftTogether.Tests.PlayMode.dll" fullname="/Users/vraiuk/WebstormProjects/drift-together/DriftTogether/Library/ScriptAssemblies/DriftTogether.Tests.PlayMode.dll" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-07-18 10:22:03Z" end-time="2026-07-18 10:36:36Z" duration="873.277730" total="4" passed="2" failed="1" inconclusive="0" skipped="1" asserts="0">
+      <properties>
+        <property name="_PID" value="1251" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1010" name="DriftTogether" fullname="DriftTogether" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-07-18 10:22:03Z" end-time="2026-07-18 10:36:36Z" duration="873.277485" total="4" passed="2" failed="1" inconclusive="0" skipped="1" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1011" name="Tests" fullname="DriftTogether.Tests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-07-18 10:22:03Z" end-time="2026-07-18 10:36:36Z" duration="873.277240" total="4" passed="2" failed="1" inconclusive="0" skipped="1" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1001" name="CoopNetworkTests" fullname="DriftTogether.Tests.CoopNetworkTests" classname="DriftTogether.Tests.CoopNetworkTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-07-18 10:22:03Z" end-time="2026-07-18 10:22:04Z" duration="0.691854" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1002" name="HostLocalSpawnsRaftAndAvatar" fullname="DriftTogether.Tests.CoopNetworkTests.HostLocalSpawnsRaftAndAvatar" methodname="HostLocalSpawnsRaftAndAvatar" classname="DriftTogether.Tests.CoopNetworkTests" runstate="Runnable" seed="342059895" result="Passed" start-time="2026-07-18 10:22:03Z" end-time="2026-07-18 10:22:04Z" duration="0.687648" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="120000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1003" name="CoopSmokeTests" fullname="DriftTogether.Tests.CoopSmokeTests" classname="DriftTogether.Tests.CoopSmokeTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-07-18 10:22:04Z" end-time="2026-07-18 10:36:04Z" duration="840.027442" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1004" name="CoopPlaythroughReachesReport" fullname="DriftTogether.Tests.CoopSmokeTests.CoopPlaythroughReachesReport" methodname="CoopPlaythroughReachesReport" classname="DriftTogether.Tests.CoopSmokeTests" runstate="Runnable" seed="1763133507" result="Failed" start-time="2026-07-18 10:22:04Z" end-time="2026-07-18 10:36:04Z" duration="840.010294" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="900000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  autopilot raft must reach the finish report
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at DriftTogether.Tests.CoopSmokeTests+<CoopPlaythroughReachesReport>d__0.MoveNext () [0x00096] in /Users/vraiuk/WebstormProjects/drift-together/DriftTogether/Assets/_Project/Tests/PlayMode/CoopNetworkTests.cs:81
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[SmokeCoop] pos=(0.00, 0.00, 4.00) wp=0/111 hull=5 vel=0.0
+[SmokeCoop] pos=(-3.00, 0.09, 119.76) wp=23/111 hull=3 vel=0.4
+[SmokeCoop] pos=(18.18, 0.19, 309.30) wp=48/111 hull=0 vel=0.5
+[SmokeCoop] pos=(14.09, 0.12, 413.96) wp=64/111 hull=0 vel=2.9
+[SmokeCoop] pos=(4.89, 0.15, 530.70) wp=79/111 hull=5 vel=0.0
+[SmokeCoop] pos=(3.29, 0.04, 531.13) wp=79/111 hull=5 vel=0.0
+[SmokeCoop] pos=(3.82, 0.05, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.16, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.18, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.13, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.15, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.15, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.05, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.04, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.13, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.15, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.12, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.18, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.18, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.07, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.04, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.11, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.12, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.11, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.19, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.20, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.09, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.06, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.11, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.08, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.08, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.18, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.21, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.12, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.09, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.12, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.06, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.05, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.16, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.20, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.13, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.13, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.14, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.06, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.03, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.13, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.18, 545.69) wp=81/111 hull=4 vel=0.0
+[SmokeCoop] pos=(3.82, 0.13, 545.69) wp=81/111 hull=4 vel=0.0
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1005" name="RelayCheckTests" fullname="DriftTogether.Tests.RelayCheckTests" classname="DriftTogether.Tests.RelayCheckTests" runstate="Explicit" testcasecount="1" result="Skipped" label="Explicit" site="SetUp" start-time="2026-07-18 10:36:04Z" end-time="2026-07-18 10:36:04Z" duration="0.001026" total="1" passed="0" failed="0" inconclusive="0" skipped="1" asserts="0">
+            <properties>
+              <property name="_SKIPREASON" value="hits live Unity Gaming Services" />
+            </properties>
+            <reason>
+              <message><![CDATA[hits live Unity Gaming Services]]></message>
+            </reason>
+            <test-case id="1006" name="RelayAllocationAndJoinCodeWork" fullname="DriftTogether.Tests.RelayCheckTests.RelayAllocationAndJoinCodeWork" methodname="RelayAllocationAndJoinCodeWork" classname="DriftTogether.Tests.RelayCheckTests" runstate="Runnable" seed="1707573321" result="Skipped" label="Explicit" site="Parent" start-time="0001-01-01 00:00:00Z" end-time="0001-01-01 00:00:00Z" duration="0.000000" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="120000" />
+              </properties>
+              <reason>
+                <message><![CDATA[hits live Unity Gaming Services]]></message>
+              </reason>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1007" name="SmokePlaythroughTests" fullname="DriftTogether.Tests.SmokePlaythroughTests" classname="DriftTogether.Tests.SmokePlaythroughTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-07-18 10:36:04Z" end-time="2026-07-18 10:36:36Z" duration="32.556168" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1008" name="FullPlaythroughReachesResultsAndReturnsToMenu" fullname="DriftTogether.Tests.SmokePlaythroughTests.FullPlaythroughReachesResultsAndReturnsToMenu" methodname="FullPlaythroughReachesResultsAndReturnsToMenu" classname="DriftTogether.Tests.SmokePlaythroughTests" runstate="Runnable" seed="1346988117" result="Passed" start-time="2026-07-18 10:36:04Z" end-time="2026-07-18 10:36:36Z" duration="32.553712" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="900000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: /Users/vraiuk/Library/Application Support/DriftTogether/Drift Together/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

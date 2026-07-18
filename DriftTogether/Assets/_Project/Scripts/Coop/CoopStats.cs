@@ -29,6 +29,7 @@ namespace DriftTogether.Coop
         public int RaftCollisions;
         public int HullAtFinish;
         public int Capsizes;
+        public int RaftLosses;
         public readonly List<PlayerRunStats> Players = new List<PlayerRunStats>();
 
         public void ChooseRoute(RiverRoute route)

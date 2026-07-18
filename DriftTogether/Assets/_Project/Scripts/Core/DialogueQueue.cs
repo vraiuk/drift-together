@@ -17,7 +17,9 @@ namespace DriftTogether.Core
         Fishing,
         Capsize,
         Anchor,
-        Scout
+        Scout,
+        RaftLost,
+        RaftSnagged
     }
 
     /// <summary>

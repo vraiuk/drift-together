@@ -271,6 +271,16 @@ namespace DriftTogether.Coop
             Active?.HostSay(LineCategory.Anchor, 25f);
         }
 
+        internal static void HostSayRaftLost()
+        {
+            Active?.HostSay(LineCategory.RaftLost, 0f);
+        }
+
+        internal static void HostSayRaftSnagged()
+        {
+            Active?.HostSay(LineCategory.RaftSnagged, 0f);
+        }
+
         // ---------- Mooring & scouting (UC-06) ----------
 
         static readonly Vector3[] MooringSpots =
