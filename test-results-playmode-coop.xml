@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-07-18 00:14:27Z" end-time="2026-07-18 00:15:01Z" duration="33.7524459">
+  <test-suite type="TestSuite" id="1013" name="Drift Together" fullname="Drift Together" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-07-18 00:14:27Z" end-time="2026-07-18 00:15:01Z" duration="33.752446" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1007" name="DriftTogether.Tests.PlayMode.dll" fullname="/Users/vraiuk/WebstormProjects/drift-together/DriftTogether/Library/ScriptAssemblies/DriftTogether.Tests.PlayMode.dll" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-07-18 00:14:27Z" end-time="2026-07-18 00:15:01Z" duration="33.748790" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="74921" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1008" name="DriftTogether" fullname="DriftTogether" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-07-18 00:14:27Z" end-time="2026-07-18 00:15:01Z" duration="33.748473" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1009" name="Tests" fullname="DriftTogether.Tests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-07-18 00:14:27Z" end-time="2026-07-18 00:15:01Z" duration="33.748257" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1001" name="CoopNetworkTests" fullname="DriftTogether.Tests.CoopNetworkTests" classname="DriftTogether.Tests.CoopNetworkTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-07-18 00:14:27Z" end-time="2026-07-18 00:14:27Z" duration="0.071032" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1002" name="HostLocalSpawnsRaftAndAvatar" fullname="DriftTogether.Tests.CoopNetworkTests.HostLocalSpawnsRaftAndAvatar" methodname="HostLocalSpawnsRaftAndAvatar" classname="DriftTogether.Tests.CoopNetworkTests" runstate="Runnable" seed="1332645119" result="Failed" start-time="2026-07-18 00:14:27Z" end-time="2026-07-18 00:14:27Z" duration="0.067076" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="120000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[Unhandled log message: '[Error] NetworkManager is nested under SessionManager. NetworkManager cannot be nested.
+'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[Unity.Netcode.Editor.NetworkManagerHelper:NotifyUserOfNestedNetworkManager (Unity.Netcode.NetworkManager,bool,bool) (at ./Library/PackageCache/com.unity.netcode.gameobjects@851f28323821/Editor/NetworkManagerHelper.cs:218)
+Unity.Netcode.NetworkManager:NetworkManagerCheckForParent (bool) (at ./Library/PackageCache/com.unity.netcode.gameobjects@851f28323821/Runtime/Core/NetworkManager.cs:969)
+Unity.Netcode.NetworkManager:OnEnable () (at ./Library/PackageCache/com.unity.netcode.gameobjects@851f28323821/Runtime/Core/NetworkManager.cs:1027)
+UnityEngine.GameObject:AddComponent<Unity.Netcode.NetworkManager> ()
+DriftTogether.Coop.Net.SessionManager:EnsureNetworkManager () (at Assets/_Project/Scripts/Coop/Net/SessionManager.cs:64)
+DriftTogether.Coop.Net.SessionManager:HostLocal () (at Assets/_Project/Scripts/Coop/Net/SessionManager.cs:200)
+DriftTogether.Tests.CoopNetworkTests/<HostLocalSpawnsRaftAndAvatar>d__0:MoveNext () (at Assets/_Project/Tests/PlayMode/CoopNetworkTests.cs:23)
+UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[NetworkManager is nested under SessionManager. NetworkManager cannot be nested.
+
+NetworkManager is nested under SessionManager. NetworkManager cannot be nested.
+
+NullReferenceException: Object reference not set to an instance of an object
+Unity.Netcode.NetworkManager.HostServerInitialize () (at ./Library/PackageCache/com.unity.netcode.gameobjects@851f28323821/Runtime/Core/NetworkManager.cs:1427)
+Unity.Netcode.NetworkManager.StartHost () (at ./Library/PackageCache/com.unity.netcode.gameobjects@851f28323821/Runtime/Core/NetworkManager.cs:1407)
+UnityEngine.Debug:LogException(Exception)
+Unity.Netcode.NetworkManager:StartHost() (at ./Library/PackageCache/com.unity.netcode.gameobjects@851f28323821/Runtime/Core/NetworkManager.cs:1412)
+DriftTogether.Coop.Net.SessionManager:HostLocal() (at Assets/_Project/Scripts/Coop/Net/SessionManager.cs:204)
+DriftTogether.Tests.<HostLocalSpawnsRaftAndAvatar>d__0:MoveNext() (at Assets/_Project/Tests/PlayMode/CoopNetworkTests.cs:23)
+UnityEngine.SetupCoroutine:InvokeMoveNext(IEnumerator, IntPtr) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)
+
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1003" name="CoopSmokeTests" fullname="DriftTogether.Tests.CoopSmokeTests" classname="DriftTogether.Tests.CoopSmokeTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-07-18 00:14:27Z" end-time="2026-07-18 00:14:27Z" duration="0.001875" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1004" name="CoopPlaythroughReachesReport" fullname="DriftTogether.Tests.CoopSmokeTests.CoopPlaythroughReachesReport" methodname="CoopPlaythroughReachesReport" classname="DriftTogether.Tests.CoopSmokeTests" runstate="Runnable" seed="1312353820" result="Failed" start-time="2026-07-18 00:14:27Z" end-time="2026-07-18 00:14:27Z" duration="0.001282" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="900000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[Unhandled log message: '[Error] NetworkManager is nested under SessionManager. NetworkManager cannot be nested.
+'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[Unity.Netcode.Editor.NetworkManagerHelper:NotifyUserOfNestedNetworkManager (Unity.Netcode.NetworkManager,bool,bool) (at ./Library/PackageCache/com.unity.netcode.gameobjects@851f28323821/Editor/NetworkManagerHelper.cs:218)
+Unity.Netcode.NetworkManager:NetworkManagerCheckForParent (bool) (at ./Library/PackageCache/com.unity.netcode.gameobjects@851f28323821/Runtime/Core/NetworkManager.cs:969)
+Unity.Netcode.NetworkManager:Initialize (bool) (at ./Library/PackageCache/com.unity.netcode.gameobjects@851f28323821/Runtime/Core/NetworkManager.cs:1136)
+Unity.Netcode.NetworkManager:StartHost () (at ./Library/PackageCache/com.unity.netcode.gameobjects@851f28323821/Runtime/Core/NetworkManager.cs:1395)
+DriftTogether.Coop.Net.SessionManager:HostLocal () (at Assets/_Project/Scripts/Coop/Net/SessionManager.cs:204)
+DriftTogether.Tests.CoopSmokeTests/<CoopPlaythroughReachesReport>d__0:MoveNext () (at Assets/_Project/Tests/PlayMode/CoopNetworkTests.cs:73)
+UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[NetworkManager is nested under SessionManager. NetworkManager cannot be nested.
+
+NullReferenceException: Object reference not set to an instance of an object
+Unity.Netcode.NetworkConnectionManager.TransportFailureEventHandler (System.Boolean duringStart) (at ./Library/PackageCache/com.unity.netcode.gameobjects@851f28323821/Runtime/Connection/NetworkConnectionManager.cs:586)
+Unity.Netcode.NetworkManager.StartHost () (at ./Library/PackageCache/com.unity.netcode.gameobjects@851f28323821/Runtime/Core/NetworkManager.cs:1402)
+UnityEngine.Debug:LogException(Exception)
+Unity.Netcode.NetworkManager:StartHost() (at ./Library/PackageCache/com.unity.netcode.gameobjects@851f28323821/Runtime/Core/NetworkManager.cs:1412)
+DriftTogether.Coop.Net.SessionManager:HostLocal() (at Assets/_Project/Scripts/Coop/Net/SessionManager.cs:204)
+DriftTogether.Tests.<CoopPlaythroughReachesReport>d__0:MoveNext() (at Assets/_Project/Tests/PlayMode/CoopNetworkTests.cs:73)
+UnityEngine.SetupCoroutine:InvokeMoveNext(IEnumerator, IntPtr) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)
+
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1005" name="SmokePlaythroughTests" fullname="DriftTogether.Tests.SmokePlaythroughTests" classname="DriftTogether.Tests.SmokePlaythroughTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-07-18 00:14:27Z" end-time="2026-07-18 00:15:01Z" duration="33.674761" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1006" name="FullPlaythroughReachesResultsAndReturnsToMenu" fullname="DriftTogether.Tests.SmokePlaythroughTests.FullPlaythroughReachesResultsAndReturnsToMenu" methodname="FullPlaythroughReachesResultsAndReturnsToMenu" classname="DriftTogether.Tests.SmokePlaythroughTests" runstate="Runnable" seed="361978355" result="Passed" start-time="2026-07-18 00:14:27Z" end-time="2026-07-18 00:15:01Z" duration="33.674441" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="900000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: /Users/vraiuk/Library/Application Support/DriftTogether/Drift Together/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

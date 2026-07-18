@@ -33,6 +33,14 @@ namespace DriftTogether.Core
             return false;
         }
 
+        public static bool CoopCommandLineRequested()
+        {
+            foreach (string arg in System.Environment.GetCommandLineArgs())
+                if (arg == "--smoke-coop" || arg == "-smoke-coop")
+                    return true;
+            return false;
+        }
+
         void Start()
         {
             _flow = GetComponent<GameFlow>();

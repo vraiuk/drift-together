@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-07-18 00:15:32Z" end-time="2026-07-18 00:15:32Z" duration="0.6502733">
+  <test-suite type="TestSuite" id="1013" name="Drift Together" fullname="Drift Together" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-07-18 00:15:32Z" end-time="2026-07-18 00:15:32Z" duration="0.650273" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1007" name="DriftTogether.Tests.PlayMode.dll" fullname="/Users/vraiuk/WebstormProjects/drift-together/DriftTogether/Library/ScriptAssemblies/DriftTogether.Tests.PlayMode.dll" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-07-18 00:15:32Z" end-time="2026-07-18 00:15:32Z" duration="0.647077" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="75049" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1008" name="DriftTogether" fullname="DriftTogether" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-07-18 00:15:32Z" end-time="2026-07-18 00:15:32Z" duration="0.646761" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1009" name="Tests" fullname="DriftTogether.Tests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-07-18 00:15:32Z" end-time="2026-07-18 00:15:32Z" duration="0.646554" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1001" name="CoopNetworkTests" fullname="DriftTogether.Tests.CoopNetworkTests" classname="DriftTogether.Tests.CoopNetworkTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-07-18 00:15:32Z" end-time="2026-07-18 00:15:32Z" duration="0.490085" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1002" name="HostLocalSpawnsRaftAndAvatar" fullname="DriftTogether.Tests.CoopNetworkTests.HostLocalSpawnsRaftAndAvatar" methodname="HostLocalSpawnsRaftAndAvatar" classname="DriftTogether.Tests.CoopNetworkTests" runstate="Runnable" seed="33042774" result="Failed" start-time="2026-07-18 00:15:32Z" end-time="2026-07-18 00:15:32Z" duration="0.485979" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="120000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[Unhandled log message: '[Exception] NullReferenceException: Object reference not set to an instance of an object'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[DriftTogether.Core.GameFlow.Update () (at Assets/_Project/Scripts/Core/GameFlow.cs:206)
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[NullReferenceException: Object reference not set to an instance of an object
+DriftTogether.Core.GameFlow.Update () (at Assets/_Project/Scripts/Core/GameFlow.cs:206)
+
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1003" name="CoopSmokeTests" fullname="DriftTogether.Tests.CoopSmokeTests" classname="DriftTogether.Tests.CoopSmokeTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-07-18 00:15:32Z" end-time="2026-07-18 00:15:32Z" duration="0.154789" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <output><![CDATA[NullReferenceException: Object reference not set to an instance of an object
+DriftTogether.Core.GameFlow.Update () (at Assets/_Project/Scripts/Core/GameFlow.cs:206)
+
+]]></output>
+            <test-case id="1004" name="CoopPlaythroughReachesReport" fullname="DriftTogether.Tests.CoopSmokeTests.CoopPlaythroughReachesReport" methodname="CoopPlaythroughReachesReport" classname="DriftTogether.Tests.CoopSmokeTests" runstate="Runnable" seed="68361461" result="Failed" start-time="2026-07-18 00:15:32Z" end-time="2026-07-18 00:15:32Z" duration="0.005783" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="900000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[Unhandled log message: '[Exception] NullReferenceException: Object reference not set to an instance of an object'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[DriftTogether.Core.GameFlow.Update () (at Assets/_Project/Scripts/Core/GameFlow.cs:206)
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[NullReferenceException: Object reference not set to an instance of an object
+DriftTogether.Core.GameFlow.Update () (at Assets/_Project/Scripts/Core/GameFlow.cs:206)
+
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1005" name="SmokePlaythroughTests" fullname="DriftTogether.Tests.SmokePlaythroughTests" classname="DriftTogether.Tests.SmokePlaythroughTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-07-18 00:15:32Z" end-time="2026-07-18 00:15:32Z" duration="0.001088" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <output><![CDATA[NullReferenceException: Object reference not set to an instance of an object
+DriftTogether.Core.GameFlow.Update () (at Assets/_Project/Scripts/Core/GameFlow.cs:206)
+
+]]></output>
+            <test-case id="1006" name="FullPlaythroughReachesResultsAndReturnsToMenu" fullname="DriftTogether.Tests.SmokePlaythroughTests.FullPlaythroughReachesResultsAndReturnsToMenu" methodname="FullPlaythroughReachesResultsAndReturnsToMenu" classname="DriftTogether.Tests.SmokePlaythroughTests" runstate="Runnable" seed="353412383" result="Failed" start-time="2026-07-18 00:15:32Z" end-time="2026-07-18 00:15:32Z" duration="0.000364" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="900000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[Unhandled log message: '[Exception] NullReferenceException: Object reference not set to an instance of an object'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[DriftTogether.Core.GameFlow.Update () (at Assets/_Project/Scripts/Core/GameFlow.cs:206)
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[NullReferenceException: Object reference not set to an instance of an object
+DriftTogether.Core.GameFlow.Update () (at Assets/_Project/Scripts/Core/GameFlow.cs:206)
+
+Saving results to: /Users/vraiuk/Library/Application Support/DriftTogether/Drift Together/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

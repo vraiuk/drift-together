@@ -42,6 +42,8 @@ namespace DriftTogether.UI
             // Automated smoke run: behave like a player pressing «Играть».
             if (Core.SmokeAutopilot.CommandLineRequested())
                 Invoke(nameof(StartGame), 1.5f);
+            else if (Core.SmokeAutopilot.CoopCommandLineRequested())
+                Invoke(nameof(StartCoopSmoke), 1.5f);
         }
 
         void BuildUI()
@@ -97,6 +99,17 @@ namespace DriftTogether.UI
         void OpenCoop()
         {
             CoopMenuScreen.Show(_canvas != null ? _canvas.transform : transform, _menuPanel);
+        }
+
+        void StartCoopSmoke()
+        {
+            var session = Coop.Net.SessionManager.Ensure();
+            if (session.HostLocal())
+            {
+                Coop.CoopBootstrap.CoopRequested = true;
+                Unity.Netcode.NetworkManager.Singleton.SceneManager.LoadScene(
+                    "River", UnityEngine.SceneManagement.LoadSceneMode.Single);
+            }
         }
 
         void OpenSettings()

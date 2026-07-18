@@ -60,7 +60,7 @@ namespace DriftTogether.Coop.Net
                 return _networkManager;
 
             var go = new GameObject("NetworkManager");
-            go.transform.SetParent(transform, false);
+            DontDestroyOnLoad(go); // must stay a root object: NGO forbids nesting
             _networkManager = go.AddComponent<NetworkManager>();
             var transport = go.AddComponent<UnityTransport>();
 

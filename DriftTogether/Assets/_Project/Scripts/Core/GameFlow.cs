@@ -47,6 +47,7 @@ namespace DriftTogether.Core
             // Co-op session in progress: hand the scene over to the raft flow.
             if (Coop.CoopBootstrap.CoopRequested)
             {
+                enabled = false; // solo Update must not run without a kayak
                 Coop.CoopBootstrap.Begin(gameObject);
                 return;
             }

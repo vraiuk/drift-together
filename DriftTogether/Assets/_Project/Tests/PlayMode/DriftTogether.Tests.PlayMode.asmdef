@@ -3,6 +3,7 @@
     "rootNamespace": "DriftTogether.Tests",
     "references": [
         "DriftTogether.Runtime",
+        "Unity.Netcode.Runtime",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

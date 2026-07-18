@@ -51,6 +51,18 @@ namespace DriftTogether.Coop.Net
             _body.interpolation = RigidbodyInterpolation.Interpolate;
             _body.isKinematic = !IsServer;
 
+            // Slick hull: rocks should deflect the raft, not glue it in place.
+            var collider = GetComponent<BoxCollider>();
+            if (collider != null)
+                collider.material = new PhysicsMaterial("RaftSlick")
+                {
+                    dynamicFriction = 0.05f,
+                    staticFriction = 0.05f,
+                    bounciness = 0.2f,
+                    frictionCombine = PhysicsMaterialCombine.Minimum,
+                    bounceCombine = PhysicsMaterialCombine.Maximum
+                };
+
             if (IsServer)
                 Integrity = new HullIntegrity(new GameClock(), MaxHull);
 
@@ -257,6 +269,10 @@ namespace DriftTogether.Coop.Net
 
         // ---------- Host physics ----------
 
+        /// <summary>Host-only direct control used by the co-op smoke autopilot.</summary>
+        public float AutoThrust;
+        public float AutoSteer;
+
         void FixedUpdate()
         {
             if (!IsServer || _body == null)
@@ -265,6 +281,14 @@ namespace DriftTogether.Coop.Net
 
             if (_flow != null)
                 _body.AddForce(_flow.CurrentAt(transform.position) * 1.05f, ForceMode.Acceleration);
+
+            if (Mathf.Abs(AutoThrust) > 0.01f)
+            {
+                _body.AddForce(transform.forward * AutoThrust * 9f, ForceMode.Acceleration);
+                // Direct yaw assist: the autopilot has no crew to row the turn.
+                _body.AddTorque(Vector3.up * AutoSteer * 2.6f, ForceMode.Acceleration);
+                _rudderInput = AutoSteer;
+            }
 
             // Rudder: torque grows with speed.
             RudderAngle.Value = Mathf.MoveTowards(RudderAngle.Value, _rudderInput * 30f, 70f * dt);

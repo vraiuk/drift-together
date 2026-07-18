@@ -182,6 +182,12 @@ namespace DriftTogether.Coop
             _level.Finish.Finished += HostOnFinish;
 
             HostSay(LineCategory.Intro, 0f);
+
+            if (SmokeAutopilot.CoopCommandLineRequested() || CoopSmokePilot.RequestedByTest)
+            {
+                var pilot = gameObject.AddComponent<CoopSmokePilot>();
+                pilot.WriteReportAndQuit = SmokeAutopilot.CoopCommandLineRequested();
+            }
         }
 
         void SpawnAvatarFor(ulong clientId, int colorIndex)
@@ -296,6 +302,16 @@ namespace DriftTogether.Coop
             var nm = NetworkManager.Singleton;
             if (nm == null)
                 return;
+
+            // Late camera attach (client avatars can spawn before our Start ran).
+            if (_cameraRig != null && _cameraRig.Target == null)
+            {
+                var own = OwnAvatar();
+                if (own != null)
+                    AttachCameraTo(own.transform);
+                else if (Raft != null)
+                    _cameraRig.Target = Raft.transform;
+            }
 
             if (Hud != null && Raft != null)
             {
@@ -482,6 +498,7 @@ namespace DriftTogether.Coop
         internal void ClientFinish(CoopReportPayload payload)
         {
             _finished = true;
+            CoopSmokePilot.ReportShown = true;
             var am = AudioManager.Instance;
             if (am != null)
                 am.PlaySfx(am.Finish, 0.9f);
