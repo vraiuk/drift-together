@@ -26,6 +26,8 @@ namespace DriftTogether.Coop.Net
 
         public bool IsSwimming { get; private set; }
         public bool IsAboard { get; private set; }
+        /// <summary>Owner-side: держит канат волока (E) на суше рядом с плотом.</summary>
+        public bool PullingRope { get; private set; }
 
         Transform _visual;
         Vector3 _pushVelocity;
@@ -279,6 +281,37 @@ namespace DriftTogether.Coop.Net
                     _pushCooldown = 3f;
                     PushServerRpc(target.OwnerClientId,
                         (target.transform.position - transform.position).normalized);
+                }
+            }
+
+            // Волок (UC-11): столб — начать; дерево — рубить; у плота на суше — тянуть (удержание E).
+            var portage = Raft != null ? Raft.GetComponent<PortageController>() : null;
+            PullingRope = false;
+            if (portage != null && !IsAboard && !IsSwimming)
+            {
+                if (kb.eKey.wasPressedThisFrame)
+                {
+                    if (portage.Phase == PortagePhase.NotStarted &&
+                        portage.NearPost(transform.position) &&
+                        portage.CanStart(Raft.transform.position))
+                    {
+                        portage.BeginServerRpc();
+                        return;
+                    }
+                    int tree = portage.Phase == PortagePhase.Clearing
+                        ? portage.NearTree(transform.position)
+                        : -1;
+                    if (tree >= 0)
+                    {
+                        portage.ChopServerRpc(tree);
+                        return;
+                    }
+                }
+                if (portage.Phase == PortagePhase.Hauling && kb.eKey.isPressed &&
+                    Vector3.Distance(transform.position, Raft.transform.position) <
+                    PortageController.PullRange)
+                {
+                    PullingRope = true;
                 }
             }
 

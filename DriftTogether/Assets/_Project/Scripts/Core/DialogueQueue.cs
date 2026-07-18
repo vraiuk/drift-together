@@ -21,7 +21,8 @@ namespace DriftTogether.Core
         RaftLost,
         RaftSnagged,
         Camp,
-        Boar
+        Boar,
+        Portage
     }
 
     /// <summary>

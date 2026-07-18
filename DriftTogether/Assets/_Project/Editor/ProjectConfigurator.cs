@@ -47,7 +47,7 @@ namespace DriftTogether.EditorTools
         {
             PlayerSettings.companyName = "DriftTogether";
             PlayerSettings.productName = "Drift Together";
-            PlayerSettings.bundleVersion = "0.7.0";
+            PlayerSettings.bundleVersion = "0.8.0";
             PlayerSettings.colorSpace = ColorSpace.Linear;
             PlayerSettings.defaultScreenWidth = 1600;
             PlayerSettings.defaultScreenHeight = 900;
@@ -233,6 +233,7 @@ namespace DriftTogether.EditorTools
             raft.AddComponent<Unity.Netcode.Components.NetworkTransform>();
             raft.AddComponent<DriftTogether.Coop.Net.RaftController>();
             raft.AddComponent<DriftTogether.Coop.Net.CoopFlow>();
+            raft.AddComponent<DriftTogether.Coop.Net.PortageController>();
             PrefabUtility.SaveAsPrefabAsset(raft, netDir + "/Raft.prefab");
             UnityEngine.Object.DestroyImmediate(raft);
 

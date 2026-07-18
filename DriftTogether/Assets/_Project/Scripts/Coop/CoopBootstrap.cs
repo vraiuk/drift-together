@@ -296,6 +296,11 @@ namespace DriftTogether.Coop
             Active?.HostSay(LineCategory.Boar, 18f);
         }
 
+        internal static void HostSayPortage()
+        {
+            Active?.HostSay(LineCategory.Portage, 15f);
+        }
+
         void HostSpawnShoreLife()
         {
             var session = SessionManager.Instance;
@@ -582,11 +587,38 @@ namespace DriftTogether.Coop
                 Hud.SetHint("КРЕН! Разойдитесь по плоту!");
                 return;
             }
-            if (!own.IsAboard && !own.IsSwimming &&
-                Net.GatherNode.Nearest(own.transform.position) != null)
+            if (!own.IsAboard && !own.IsSwimming)
             {
-                Hud.SetHint("E — собрать припасы");
-                return;
+                var portage = Raft.GetComponent<Net.PortageController>();
+                if (portage != null)
+                {
+                    if (portage.Phase == PortagePhase.NotStarted &&
+                        portage.NearPost(own.transform.position) &&
+                        portage.CanStart(Raft.transform.position))
+                    {
+                        Hud.SetHint("E — начать волок (обход порогов по суше)");
+                        return;
+                    }
+                    if (portage.Phase == PortagePhase.Clearing)
+                    {
+                        Hud.SetHint(portage.NearTree(own.transform.position) >= 0
+                            ? "E — рубить просеку!"
+                            : "Рубите деревья на просеке — они впереди по тропе");
+                        return;
+                    }
+                    if (portage.Phase == PortagePhase.Hauling)
+                    {
+                        Hud.SetHint(own.PullingRope
+                            ? $"Тянем! {(int)(portage.ProgressSync.Value * 100)}% (еда кончится — будет тяжелее)"
+                            : "Держите E рядом с плотом — тащить все вместе");
+                        return;
+                    }
+                }
+                if (Net.GatherNode.Nearest(own.transform.position) != null)
+                {
+                    Hud.SetHint("E — собрать припасы");
+                    return;
+                }
             }
             var fishing = own.GetComponent<Net.AvatarFishing>();
             string fishHint = fishing != null ? fishing.HintText() : null;

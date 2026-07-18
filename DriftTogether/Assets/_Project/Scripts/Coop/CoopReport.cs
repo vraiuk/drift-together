@@ -39,6 +39,7 @@ namespace DriftTogether.Coop
         public int HullAtFinish;
         public int Capsizes;
         public int RaftLosses;
+        public bool PortageUsed;
         public PlayerReportRow[] Players;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -49,6 +50,7 @@ namespace DriftTogether.Coop
             serializer.SerializeValue(ref HullAtFinish);
             serializer.SerializeValue(ref Capsizes);
             serializer.SerializeValue(ref RaftLosses);
+            serializer.SerializeValue(ref PortageUsed);
 
             int count = Players?.Length ?? 0;
             serializer.SerializeValue(ref count);
@@ -68,6 +70,7 @@ namespace DriftTogether.Coop
                 HullAtFinish = stats.HullAtFinish,
                 Capsizes = stats.Capsizes,
                 RaftLosses = stats.RaftLosses,
+                PortageUsed = stats.PortageUsed,
                 Players = new PlayerReportRow[stats.Players.Count]
             };
             for (int i = 0; i < stats.Players.Count; i++)
@@ -99,7 +102,8 @@ namespace DriftTogether.Coop
                 RaftCollisions = RaftCollisions,
                 HullAtFinish = HullAtFinish,
                 Capsizes = Capsizes,
-                RaftLosses = RaftLosses
+                RaftLosses = RaftLosses,
+                PortageUsed = PortageUsed
             };
             for (int i = 0; i < (Players?.Length ?? 0); i++)
             {

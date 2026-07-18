@@ -385,11 +385,17 @@ namespace DriftTogether.Coop.Net
         public float AutoThrust;
         public float AutoSteer;
 
+        /// <summary>UC-11: во время волока плотом управляет PortageController.</summary>
+        public bool PortageActive;
+
         void FixedUpdate()
         {
             if (!IsServer || _body == null)
                 return;
             float dt = Time.fixedDeltaTime;
+
+            if (PortageActive)
+                return;
 
             UpdateBalance(dt);
             UpdateAnchor(dt);
