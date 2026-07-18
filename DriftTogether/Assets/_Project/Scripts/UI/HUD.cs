@@ -115,10 +115,12 @@ namespace DriftTogether.UI
             _mushroomText.text = $"Грибы {Mathf.Min(count, MushroomTracker.Goal)}/{MushroomTracker.Goal}";
         }
 
-        /// <summary>Co-op has no mushrooms — the counter shows the crew size instead.</summary>
-        public void ShowCrewCounter(int players)
+        /// <summary>Co-op has no mushrooms — the counter shows crew and food instead.</summary>
+        public void ShowCrewCounter(int players, int food = -1)
         {
-            _mushroomText.text = $"Команда: {players}";
+            _mushroomText.text = food >= 0
+                ? $"Команда {players} · Еда {food}"
+                : $"Команда: {players}";
         }
 
         public void SetHint(string hint) => _hintText.text = hint ?? "";

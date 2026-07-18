@@ -23,6 +23,8 @@ namespace DriftTogether.Coop.Net
 
         public NetworkVariable<int> Hull = new NetworkVariable<int>(MaxHull);
         public NetworkVariable<float> RudderAngle = new NetworkVariable<float>(0f);
+        /// <summary>Shared food store (fish and foraged supplies).</summary>
+        public NetworkVariable<int> Food = new NetworkVariable<int>(0);
 
         public PostSystem Posts { get; } = new PostSystem();
         public HullIntegrity Integrity { get; private set; }
@@ -175,6 +177,71 @@ namespace DriftTogether.Coop.Net
             _postRudder = CreatePostMarker("Post_Rudder", new Vector3(0f, 0.42f, -1.35f), 180f);
             _postOarLeft = CreatePostMarker("Post_OarLeft", new Vector3(-1.55f, 0.42f, 0.35f), -90f);
             _postOarRight = CreatePostMarker("Post_OarRight", new Vector3(1.55f, 0.42f, 0.35f), 90f);
+
+            // Fishing rod stands at the bow corners (UC-04).
+            _rodStands[0] = CreateRodStand(new Vector3(-1.4f, 0.35f, 1.25f));
+            _rodStands[1] = CreateRodStand(new Vector3(1.4f, 0.35f, 1.25f));
+        }
+
+        readonly Transform[] _rodStands = new Transform[2];
+        readonly bool[] _rodTaken = new bool[2];
+
+        Transform CreateRodStand(Vector3 localPos)
+        {
+            var stand = new GameObject("RodStand").transform;
+            stand.SetParent(transform, false);
+            stand.localPosition = localPos;
+
+            var rod = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            rod.name = "Rod";
+            rod.transform.SetParent(stand, false);
+            rod.transform.localPosition = new Vector3(0f, 0.55f, 0f);
+            rod.transform.localRotation = Quaternion.Euler(-24f, 0f, 0f);
+            rod.transform.localScale = new Vector3(0.04f, 0.6f, 0.04f);
+            GameMaterials.ApplyTo(rod, "Wood");
+            Destroy(rod.GetComponent<Collider>());
+            return stand;
+        }
+
+        /// <summary>Nearest stand with a rod still on it (owner-side query).</summary>
+        public int NearestRodStand(Vector3 position, float radius)
+        {
+            for (int i = 0; i < _rodStands.Length; i++)
+            {
+                if (_rodStands[i] == null)
+                    continue;
+                if (Vector3.Distance(position, _rodStands[i].position) < radius)
+                    return i;
+            }
+            return -1;
+        }
+
+        public bool TryTakeRod(int stand)
+        {
+            if (stand < 0 || stand >= _rodTaken.Length || _rodTaken[stand])
+                return false;
+            _rodTaken[stand] = true;
+            RodVisibleClientRpc(stand, false);
+            return true;
+        }
+
+        public void ReturnRod(int stand)
+        {
+            if (stand < 0 || stand >= _rodTaken.Length)
+                return;
+            _rodTaken[stand] = false;
+            RodVisibleClientRpc(stand, true);
+        }
+
+        [Rpc(SendTo.Everyone)]
+        void RodVisibleClientRpc(int stand, bool visible)
+        {
+            if (stand >= 0 && stand < _rodStands.Length && _rodStands[stand] != null)
+            {
+                var rod = _rodStands[stand].Find("Rod");
+                if (rod != null)
+                    rod.gameObject.SetActive(visible);
+            }
         }
 
         Transform _rudderBlade;

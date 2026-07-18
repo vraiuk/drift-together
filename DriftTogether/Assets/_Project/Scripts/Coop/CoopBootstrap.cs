@@ -255,6 +255,11 @@ namespace DriftTogether.Coop
             return d.magnitude < 7f;
         }
 
+        internal static void HostSayFishing()
+        {
+            Active?.HostSay(LineCategory.Fishing, 20f);
+        }
+
         internal static void HostCampfireRest()
         {
             if (Active == null || Raft == null || NetworkManager.Singleton == null ||
@@ -319,7 +324,7 @@ namespace DriftTogether.Coop
                 int crew = 0;
                 foreach (var _ in FindObjectsByType<PlayerAvatar>(FindObjectsSortMode.None))
                     crew++;
-                Hud.ShowCrewCounter(Mathf.Max(crew, 1));
+                Hud.ShowCrewCounter(Mathf.Max(crew, 1), Raft.Food.Value);
 
                 var own = OwnAvatar();
                 Hud.SetWet(own != null && own.Wet.Value);
@@ -358,6 +363,13 @@ namespace DriftTogether.Coop
                             PlayerAvatar.BoardRange + 2.2f
                     ? "E — залезть на плот"
                     : "Плывите к плоту");
+                return;
+            }
+            var fishing = own.GetComponent<Net.AvatarFishing>();
+            string fishHint = fishing != null ? fishing.HintText() : null;
+            if (fishHint != null && (RaftPost)own.PostIndex.Value == RaftPost.None)
+            {
+                Hud.SetHint(fishHint);
                 return;
             }
             if ((RaftPost)own.PostIndex.Value != RaftPost.None)

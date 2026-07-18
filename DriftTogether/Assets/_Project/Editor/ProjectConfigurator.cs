@@ -47,7 +47,7 @@ namespace DriftTogether.EditorTools
         {
             PlayerSettings.companyName = "DriftTogether";
             PlayerSettings.productName = "Drift Together";
-            PlayerSettings.bundleVersion = "0.1.0";
+            PlayerSettings.bundleVersion = "0.3.0";
             PlayerSettings.colorSpace = ColorSpace.Linear;
             PlayerSettings.defaultScreenWidth = 1600;
             PlayerSettings.defaultScreenHeight = 900;
@@ -241,6 +241,7 @@ namespace DriftTogether.EditorTools
             avatar.AddComponent<Unity.Netcode.NetworkObject>();
             avatar.AddComponent<DriftTogether.Coop.Net.OwnerNetworkTransform>();
             avatar.AddComponent<DriftTogether.Coop.Net.PlayerAvatar>();
+            avatar.AddComponent<DriftTogether.Coop.Net.AvatarFishing>();
             PrefabUtility.SaveAsPrefabAsset(avatar, netDir + "/PlayerAvatar.prefab");
             UnityEngine.Object.DestroyImmediate(avatar);
 

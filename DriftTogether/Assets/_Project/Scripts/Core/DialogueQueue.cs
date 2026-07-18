@@ -13,7 +13,8 @@ namespace DriftTogether.Core
         Finish,
         NoisyNerves,
         Idle,
-        Respawn
+        Respawn,
+        Fishing
     }
 
     /// <summary>

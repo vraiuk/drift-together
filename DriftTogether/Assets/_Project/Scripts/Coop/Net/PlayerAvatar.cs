@@ -268,9 +268,13 @@ namespace DriftTogether.Coop.Net
                 }
             }
 
-            // E — занять пост / отдохнуть у берегового костра / ремонт.
+            // E — рыбалка имеет приоритет, затем пост / костёр / ремонт.
             if (kb.eKey.wasPressedThisFrame && IsAboard && Raft != null)
             {
+                var fishing = GetComponent<AvatarFishing>();
+                if (fishing != null && fishing.TryHandleInteract())
+                    return;
+
                 RaftPost nearest = Raft.NearestPost(transform.position, 1.4f);
                 if (nearest != RaftPost.None)
                 {

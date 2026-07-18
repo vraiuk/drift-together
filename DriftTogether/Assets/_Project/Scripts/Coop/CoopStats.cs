@@ -14,6 +14,7 @@ namespace DriftTogether.Coop
         public int PushesGiven;
         public int OarStrokes;
         public float RudderSeconds;
+        public int FishCaught;
     }
 
     /// <summary>
@@ -67,6 +68,7 @@ namespace DriftTogether.Coop
             AddMax(result, "Мотор", p => p.OarStrokes);
             AddMax(result, "Морж", p => p.WetSeconds);
             AddMax(result, "Толкач", p => p.PushesGiven);
+            AddMax(result, "Рыбак", p => p.FishCaught);
 
             var dry = Players.Where(p => p.OverboardCount == 0).Select(p => p.Name).ToList();
             if (dry.Count > 0 && dry.Count < Players.Count)

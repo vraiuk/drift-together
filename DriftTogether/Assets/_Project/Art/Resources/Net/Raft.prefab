@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 569112263
+  GlobalObjectIdHash: 1119806558
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -173,6 +173,10 @@ MonoBehaviour:
     m_InternalValue: 5
   RudderAngle:
     m_InternalValue: 0
+  Food:
+    m_InternalValue: 0
+  AutoThrust: 0
+  AutoSteer: 0
 --- !u!114 &7648941212022944739
 MonoBehaviour:
   m_ObjectHideFlags: 0
